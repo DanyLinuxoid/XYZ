@@ -4,29 +4,24 @@ using XYZ.Models.Common.Enums;
 namespace XYZ.Logic.Billing.Factory
 {
     /// <summary>
-    /// Main billing gateway factory class for payment API's.
+    /// Main billing gateway factory class for payment APIs.
     /// </summary>
     public class BillingGatewayFactory : IBillingGatewayFactory
     {
         /// <summary>
-        /// Payment API's container.
+        /// Payment APIs container.
         /// </summary>
-        private readonly Dictionary<PaymentGatewayType, IPaymentGatewayLogic> _gatewayLogics;
+        private readonly Dictionary<PaymentGatewayType, IPaymentGatewayLogic> _paymentGateways;
 
         /// <summary>
-        /// Main billing gateway factory constructor for payment API's.
+        /// Main billing gateway factory constructor for payment APIs.
         /// </summary>
-        /// <param name="paypalLogic">Paypal gateway processing logic.</param>
-        /// <param name="payseraLogic">Paysera gateway processing logic.</param>
-        public BillingGatewayFactory(
-            IPaypalGatewayLogic paypalLogic, 
-            IPayseraGatewayLogic payseraLogic)
+        /// <param name="gatewayLogics">Collection of registered payment gateways.</param>
+        public BillingGatewayFactory(IEnumerable<IPaymentGatewayLogic> gatewayLogics)
         {
-            _gatewayLogics = new Dictionary<PaymentGatewayType, IPaymentGatewayLogic>
-            {
-                { PaymentGatewayType.PayPal, paypalLogic },
-                { PaymentGatewayType.Paysera, payseraLogic }
-            };
+            if (gatewayLogics == null) throw new ArgumentNullException(nameof(gatewayLogics));
+
+            _paymentGateways = gatewayLogics.ToDictionary(g => g.GatewayType);
         }
 
         /// <summary>
@@ -35,9 +30,9 @@ namespace XYZ.Logic.Billing.Factory
         /// <param name="gatewayType">Gateway API type.</param>
         /// <returns>Related gateway.</returns>
         /// <exception cref="ArgumentOutOfRangeException">If gateway value not found in enum.</exception>
-        public IPaymentGatewayLogic GetGatewayLogic(PaymentGatewayType gatewayType)
+        public IPaymentGatewayLogic GetPaymentGateway(PaymentGatewayType gatewayType)
         {
-            if (_gatewayLogics.TryGetValue(gatewayType, out var gatewayLogic))
+            if (_paymentGateways.TryGetValue(gatewayType, out var gatewayLogic))
                 return gatewayLogic;
 
             throw new ArgumentOutOfRangeException(nameof(gatewayType), $"Unknown gateway type: {gatewayType}");

@@ -65,9 +65,9 @@ namespace XYZ.Logic.Features.Billing.Base
         }
 
         /// <summary>
-        /// Specific gateway logic.
+        /// Specific gateway type
         /// </summary>
-        protected abstract PaymentGatewayType _gatewayType { get; }
+        public abstract PaymentGatewayType GatewayType { get; }
 
         /// <summary>
         /// General order validation logic,
@@ -79,7 +79,7 @@ namespace XYZ.Logic.Features.Billing.Base
             var validationResult = GetOrderValidationResult(order);
             if (validationResult.ValidationErrors.Any())
             {
-                _simpleLogger.Log($"{PaymentProcessingEvent.ValidationError} | {_gatewayType} | {nameof(order.UserId)}: {order.UserId} | {nameof(order.OrderNumber)}: {order.OrderNumber}");
+                _simpleLogger.Log($"{PaymentProcessingEvent.ValidationError} | {GatewayType} | {nameof(order.UserId)}: {order.UserId} | {nameof(order.OrderNumber)}: {order.OrderNumber}");
                 return new()
                 {
                     OrderValidationResult = validationResult,
@@ -140,10 +140,10 @@ namespace XYZ.Logic.Features.Billing.Base
         /// <returns>API processing result.</returns>
         protected virtual async Task<TOutput> GetProcessedOrderResultAsync(TInput order) 
         {
-            _simpleLogger.Log($"{PaymentProcessingEvent.PaymentStart} | {_gatewayType} | {nameof(order.UserId)}: {order.UserId} | {nameof(order.OrderNumber)}: {order.OrderNumber}");
+            _simpleLogger.Log($"{PaymentProcessingEvent.PaymentStart} | {GatewayType} | {nameof(order.UserId)}: {order.UserId} | {nameof(order.OrderNumber)}: {order.OrderNumber}");
             var processResult = await _apiOrderLogic.GetProcessedOrderResultAsync(order);
             PaymentProcessingEvent eventResult = processResult.IsSuccess && !string.IsNullOrEmpty(processResult.GatewayTransactionId) ? PaymentProcessingEvent.PaymentFinish : PaymentProcessingEvent.PaymentFailed;
-            _simpleLogger.Log($"{eventResult} | {_gatewayType} | {nameof(order.UserId)}: {order.UserId} | {nameof(order.OrderNumber)}: {order.OrderNumber}");
+            _simpleLogger.Log($"{eventResult} | {GatewayType} | {nameof(order.UserId)}: {order.UserId} | {nameof(order.OrderNumber)}: {order.OrderNumber}");
             return processResult;
         }
     }

@@ -12,13 +12,15 @@ namespace XYZ.Tests.Logic.Billing.Factory
         public void GetGatewayLogic_ValidPayPalGatewayType_ReturnsPaypalLogic()
         {
             // Arrange
-            var mockPaypalLogic = new Mock<IPaypalGatewayLogic>();
-            var mockPayseraLogic = new Mock<IPayseraGatewayLogic>();
+            var mockPaypalLogic = new Mock<IPaymentGatewayLogic>();
+            var mockPayseraLogic = new Mock<IPaymentGatewayLogic>();
+            mockPaypalLogic.Setup(x => x.GatewayType).Returns(PaymentGatewayType.PayPal);
+            mockPayseraLogic.Setup(x => x.GatewayType).Returns(PaymentGatewayType.Paysera);
 
-            var factory = new BillingGatewayFactory(mockPaypalLogic.Object, mockPayseraLogic.Object);
+            var factory = new BillingGatewayFactory(new List<IPaymentGatewayLogic>() { mockPaypalLogic.Object, mockPayseraLogic.Object });
 
             // Act
-            var result = factory.GetGatewayLogic(PaymentGatewayType.PayPal);
+            var result = factory.GetPaymentGateway(PaymentGatewayType.PayPal);
 
             // Assert
             Assert.Equal(mockPaypalLogic.Object, result);
@@ -28,13 +30,15 @@ namespace XYZ.Tests.Logic.Billing.Factory
         public void GetGatewayLogic_ValidPayseraGatewayType_ReturnsPayseraLogic()
         {
             // Arrange
-            var mockPaypalLogic = new Mock<IPaypalGatewayLogic>();
-            var mockPayseraLogic = new Mock<IPayseraGatewayLogic>();
+            var mockPaypalLogic = new Mock<IPaymentGatewayLogic>();
+            var mockPayseraLogic = new Mock<IPaymentGatewayLogic>();
+            mockPaypalLogic.Setup(x => x.GatewayType).Returns(PaymentGatewayType.PayPal);
+            mockPayseraLogic.Setup(x => x.GatewayType).Returns(PaymentGatewayType.Paysera);
 
-            var factory = new BillingGatewayFactory(mockPaypalLogic.Object, mockPayseraLogic.Object);
+            var factory = new BillingGatewayFactory(new List<IPaymentGatewayLogic>() { mockPaypalLogic.Object, mockPayseraLogic.Object });
 
             // Act
-            var result = factory.GetGatewayLogic(PaymentGatewayType.Paysera);
+            var result = factory.GetPaymentGateway(PaymentGatewayType.Paysera);
 
             // Assert
             Assert.Equal(mockPayseraLogic.Object, result);
@@ -44,13 +48,15 @@ namespace XYZ.Tests.Logic.Billing.Factory
         public void GetGatewayLogic_UnknownGatewayType_ThrowsArgumentOutOfRangeException()
         {
             // Arrange
-            var mockPaypalLogic = new Mock<IPaypalGatewayLogic>();
-            var mockPayseraLogic = new Mock<IPayseraGatewayLogic>();
+            var mockPaypalLogic = new Mock<IPaymentGatewayLogic>();
+            var mockPayseraLogic = new Mock<IPaymentGatewayLogic>();
+            mockPaypalLogic.Setup(x => x.GatewayType).Returns(PaymentGatewayType.PayPal);
+            mockPayseraLogic.Setup(x => x.GatewayType).Returns(PaymentGatewayType.Paysera);
 
-            var factory = new BillingGatewayFactory(mockPaypalLogic.Object, mockPayseraLogic.Object);
+            var factory = new BillingGatewayFactory(new List<IPaymentGatewayLogic>() { mockPaypalLogic.Object, mockPayseraLogic.Object });
 
             // Act & Assert
-            Assert.Throws<ArgumentOutOfRangeException>(() => factory.GetGatewayLogic((PaymentGatewayType)999));
+            Assert.Throws<ArgumentOutOfRangeException>(() => factory.GetPaymentGateway((PaymentGatewayType)999));
         }
     }
 }

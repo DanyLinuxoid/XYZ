@@ -13,6 +13,6 @@ namespace XYZ.Logic.Common.Interfaces
         /// <param name="gatewayType">Gateway API type.</param>
         /// <returns>Related gateway.</returns>
         /// <exception cref="ArgumentOutOfRangeException">If gateway value not found in enum.</exception>
-        IPaymentGatewayLogic GetGatewayLogic(PaymentGatewayType gatewayType);
+        IPaymentGatewayLogic GetPaymentGateway(PaymentGatewayType gatewayType);
     }
 }

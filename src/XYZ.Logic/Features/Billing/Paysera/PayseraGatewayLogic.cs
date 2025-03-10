@@ -13,7 +13,7 @@ namespace XYZ.Logic.Features.Billing.Paysera
     /// <summary>
     /// Gateway specific logic.
     /// </summary>
-    public class PayseraGatewayLogic : GatewayLogicBase<PayseraOrderInfo, PayseraOrderResult>, IPayseraGatewayLogic
+    public class PayseraGatewayLogic : GatewayLogicBase<PayseraOrderInfo, PayseraOrderResult>, IPaymentGatewayLogic
     {
         /// <summary>
         /// Main order logic.
@@ -24,11 +24,6 @@ namespace XYZ.Logic.Features.Billing.Paysera
         /// Database access.
         /// </summary>
         private readonly IDatabaseLogic _databaseLogic;
-
-        /// <summary>
-        /// Gateway type.
-        /// </summary>
-        protected override PaymentGatewayType _gatewayType { get; } = PaymentGatewayType.Paysera;
 
         /// <summary>
         /// Gateway specific constructor.
@@ -54,6 +49,11 @@ namespace XYZ.Logic.Features.Billing.Paysera
         }
 
         /// <summary>
+        /// Specific gateway type
+        /// </summary>
+        public override PaymentGatewayType GatewayType => PaymentGatewayType.Paysera;
+
+        /// <summary>
         /// Main gateway public access entrypoint.
         /// </summary>
         /// <param name="order">Generic order from logic.</param>
@@ -73,7 +73,7 @@ namespace XYZ.Logic.Features.Billing.Paysera
 
             ORDER? orderFull = await _databaseLogic.QueryAsync(new OrderByOrderNumberAndUserIdGetQuery(order.UserId, order.OrderNumber));
             if (orderFull?.PAYPAL_ORDER_ID != null) // We allow manipulations on existing order only if it's not finished
-                throw new InvalidOperationException($"Order with number {order.OrderNumber} is not binded with {_gatewayType}");
+                throw new InvalidOperationException($"Order with number {order.OrderNumber} is not binded with {GatewayType}");
             else if (orderFull?.ORDER_STATUS == (int)OrderStatus.Completed) // We disallow gateway switching
                 throw new InvalidOperationException($"Order with number {order.OrderNumber} is in status {OrderStatus.Completed} (Finished)");
 

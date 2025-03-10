@@ -1,4 +1,5 @@
-﻿using XYZ.Models.Features.Billing.Data;
+﻿using XYZ.Models.Common.Enums;
+using XYZ.Models.Features.Billing.Data;
 using XYZ.Models.Features.Billing.Data.Order.Order;
 
 namespace XYZ.Logic.Common.Interfaces
@@ -8,6 +9,11 @@ namespace XYZ.Logic.Common.Interfaces
     /// </summary>
     public interface IPaymentGatewayLogic
     {
+        /// <summary>
+        /// Specific gateway type
+        /// </summary>
+        PaymentGatewayType GatewayType { get; }
+
         /// <summary>
         /// Main gateway public access entrypoint.
         /// </summary>

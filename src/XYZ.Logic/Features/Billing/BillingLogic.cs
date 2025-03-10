@@ -85,7 +85,7 @@ namespace XYZ.Logic.Features.Billing
                     ProblemDetails = new ProblemDetailed("User not found", $"User with Id {order.UserId} not found"),
                 };
 
-            var gatewayLogic = _billingGatewayFactory.GetGatewayLogic(order.PaymentGateway);
+            var gatewayLogic = _billingGatewayFactory.GetPaymentGateway(order.PaymentGateway);
 
             // Main call
             OrderResult orderResult = await gatewayLogic.GetGatewayOrderProcessResultAsync(order);
