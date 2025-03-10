@@ -1,31 +1,22 @@
 ﻿using Moq;
+
 using XYZ.DataAccess.Interfaces;
 using XYZ.DataAccess.Tables.ORDER_TABLE;
 using XYZ.DataAccess.Tables.ORDER_TBL.Queries;
-using XYZ.Logic.Features.Billing.Paysera;
-using XYZ.Models.Features.Billing.Data;
-using XYZ.Models.Features.Billing.Data.Order.Order;
-using XYZ.Models.Common.Enums;
-using XYZ.Models.Common.Api.Paysera;
-using XYZ.Models.Common.ExceptionHandling;
-using Xunit;
-using System.Threading.Tasks;
-using System.Linq;
-using System;
 using XYZ.Logic.Common.Interfaces;
+using XYZ.Logic.Features.Billing.Paysera;
+using XYZ.Models.Common.Api.Paysera;
+using XYZ.Models.Common.Enums;
+using XYZ.Models.Features.Billing.Data;
 using XYZ.Models.Features.Billing.Data.Dto;
 using XYZ.Models.Features.Billing.Validation;
-using System.ComponentModel;
-using System.Data;
-using System.Reflection;
-using XYZ.DataAccess.Logic;
 
 namespace XYZ.Tests.Logic.Features.Billing.Paysera
 {
     public class PayseraGatewayLogicTests
     {
         private readonly Mock<ISimpleLogger> _simpleLoggerMock;
-        private readonly Mock<IPayseraApiLogic<PayseraOrderInfo, PayseraOrderResult>> _payseraApiLogicMock;
+        private readonly Mock<IApiOrderLogic<PayseraOrderInfo, PayseraOrderResult>> _payseraApiLogicMock;
         private readonly Mock<IOrderMapperLogic<PayseraOrderInfo>> _payseraMapperLogicMock;
         private readonly Mock<IPayseraGatewayOrderSavingLogic> _payseraOrderSavingLogicMock;
         private readonly Mock<IExceptionSaverLogic> _exceptionSaverLogicMock;
@@ -37,7 +28,7 @@ namespace XYZ.Tests.Logic.Features.Billing.Paysera
         public PayseraGatewayLogicTests()
         {
             _simpleLoggerMock = new Mock<ISimpleLogger>();
-            _payseraApiLogicMock = new Mock<IPayseraApiLogic<PayseraOrderInfo, PayseraOrderResult>>();
+            _payseraApiLogicMock = new Mock<IApiOrderLogic<PayseraOrderInfo, PayseraOrderResult>>();
             _payseraMapperLogicMock = new Mock<IOrderMapperLogic<PayseraOrderInfo>>();
             _payseraOrderSavingLogicMock = new Mock<IPayseraGatewayOrderSavingLogic>();
             _exceptionSaverLogicMock = new Mock<IExceptionSaverLogic>();

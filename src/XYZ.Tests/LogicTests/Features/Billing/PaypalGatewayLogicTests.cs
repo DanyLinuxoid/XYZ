@@ -16,7 +16,7 @@ namespace XYZ.Tests.Logic.Features.Billing.Paypal
     public class PaypalGatewayLogicTests
     {
         private readonly Mock<ISimpleLogger> _loggerMock;
-        private readonly Mock<IPaypalApiLogic<PaypalOrderInfo, PaypalOrderResult>> _paypalApiLogicMock;
+        private readonly Mock<IApiOrderLogic<PaypalOrderInfo, PaypalOrderResult>> _paypalApiLogicMock;
         private readonly Mock<IOrderMapperLogic<PaypalOrderInfo>> _paypalMapperLogicMock;
         private readonly Mock<IPaypalGatewayOrderSavingLogic> _paypalOrderSavingLogicMock;
         private readonly Mock<IExceptionSaverLogic> _exceptionSaverLogicMock;
@@ -27,7 +27,7 @@ namespace XYZ.Tests.Logic.Features.Billing.Paypal
         public PaypalGatewayLogicTests()
         {
             _loggerMock = new Mock<ISimpleLogger>();
-            _paypalApiLogicMock = new Mock<IPaypalApiLogic<PaypalOrderInfo, PaypalOrderResult>>();
+            _paypalApiLogicMock = new Mock<IApiOrderLogic<PaypalOrderInfo, PaypalOrderResult>>();
             _paypalMapperLogicMock = new Mock<IOrderMapperLogic<PaypalOrderInfo>>();
             _paypalOrderSavingLogicMock = new Mock<IPaypalGatewayOrderSavingLogic>();
             _exceptionSaverLogicMock = new Mock<IExceptionSaverLogic>();

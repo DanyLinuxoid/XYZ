@@ -42,7 +42,7 @@ namespace XYZ.Logic.Features.Billing.Paypal
         /// <param name="databaseLogic">Database access.</param>
         public PaypalGatewayLogic(
             ISimpleLogger logger,
-            IPaypalApiLogic<PaypalOrderInfo, PaypalOrderResult> paypalApiLogic,
+             IApiOrderLogic<PaypalOrderInfo, PaypalOrderResult> paypalApiLogic,
             IOrderMapperLogic<PaypalOrderInfo> paypalMapperLogic,
             IPaypalGatewayOrderSavingLogic paypalOrderSavingLogic,
             IExceptionSaverLogic exceptionSaverLogic,

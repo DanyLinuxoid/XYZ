@@ -10,7 +10,7 @@ namespace XYZ.Logic.Common.Api.Paysera
     /// <summary>
     /// Main logic to access Paysera API directly.
     /// </summary>
-    public class PayseraApiLogic : IPayseraApiLogic<PayseraOrderInfo, PayseraOrderResult>
+    public class PayseraApiLogic : IApiOrderLogic<PayseraOrderInfo, PayseraOrderResult>
     {
         /// <summary>
         /// Process Paysera order and gets result.

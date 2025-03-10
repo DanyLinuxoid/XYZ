@@ -9,7 +9,7 @@ namespace XYZ.Logic.Common.Api.Paypal
     /// <summary>
     /// Main logic to access Paypal API directly.
     /// </summary>
-    public class PaypalApiLogic : IPaypalApiLogic<PaypalOrderInfo, PaypalOrderResult>
+    public class PaypalApiLogic : IApiOrderLogic<PaypalOrderInfo, PaypalOrderResult>
     {
         /// <summary>
         /// Process Paypal order and gets result.

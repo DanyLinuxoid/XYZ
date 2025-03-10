@@ -41,7 +41,7 @@ namespace XYZ.Logic.Features.Billing.Paysera
         /// <param name="orderLogic">Main order logic.</param>
         /// <param name="databaseLogic">Database access.</param>
         public PayseraGatewayLogic(
-            IPayseraApiLogic<PayseraOrderInfo, PayseraOrderResult> payseraApiLogic,
+            IApiOrderLogic<PayseraOrderInfo, PayseraOrderResult> payseraApiLogic,
             IOrderMapperLogic<PayseraOrderInfo> payseraMapperLogic,
             IPayseraGatewayOrderSavingLogic payseraOrderSavingLogic,
             IExceptionSaverLogic exceptionSaverLogic,
