@@ -2,6 +2,11 @@
 
 This Web API integrates multiple payment systems (Gateways) for processing transactions.
 
+## Techstack
+- ASP.NET Web API (C#)
+- Swagger (UI)
+- Dapper + MSSQL
+
 ## Setup
 
 1. Import database from db-backup using SQL Server Management Studio (SSMS)
