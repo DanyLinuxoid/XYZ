@@ -14,7 +14,7 @@ namespace XYZ.Tests.Logic.Common.Mappers
             var result = exception.ToAppErrorDbo();
 
             // Assert
-            Assert.Equal(exception.Message, result.ERROR_MESSAGE);
+            Assert.Equal(exception.Message, result.MESSAGE);
             Assert.Equal(exception.StackTrace ?? string.Empty, result.STACKTRACE);
         }
 
@@ -29,7 +29,7 @@ namespace XYZ.Tests.Logic.Common.Mappers
             var result = exception.ToUserErrorDbo(userId);
 
             // Assert
-            Assert.Equal(exception.Message, result.ERROR_MESSAGE);
+            Assert.Equal(exception.Message, result.MESSAGE);
             Assert.Equal(exception.StackTrace ?? string.Empty, result.STACKTRACE);
             Assert.Equal(userId, result.USER_ID);
         }

@@ -3,7 +3,6 @@
 using XYZ.DataAccess.Enums;
 using XYZ.DataAccess.Interfaces;
 using XYZ.DataAccess.Tables.APP_ERROR_TABLE;
-using XYZ.DataAccess.Tables.Base;
 using XYZ.DataAccess.Tables.USER_ERROR_TABLE;
 using XYZ.Logic.Common.Interfaces;
 using XYZ.Logic.Common.Mappers;
@@ -21,26 +20,30 @@ namespace XYZ.Logic.Common.ExceptionSaving
             _simpleLogger = simpleLogger;
         }
 
-        public async Task SaveUnhandledErrorAsync(Exception exception, string? additionalText = null, bool shouldSaveInDb = true) => 
-            await SaveError(exception, "unhandled-exceptions-log", new APP_ERROR_CUD(), exception.ToAppErrorDbo(), shouldSaveInDb, additionalText);
+        public async Task SaveUnhandledErrorAsync(Exception exception, string? additionalText = null, bool shouldSaveInDb = true) =>
+            await SaveErrorAsync(exception, additionalText, shouldSaveInDb, (ex) => ex.ToAppErrorDbo(), new APP_ERROR_CUD(), "unhandled-exceptions-log");
 
-        public async Task SaveUserErrorAsync(Exception exception, long userId, string? additionalText = null, bool shouldSaveInDb = true) => 
-            await SaveError(exception, "user-exceptions-log", new USER_ERROR_CUD(), exception.ToUserErrorDbo(userId), shouldSaveInDb, additionalText);
+        public async Task SaveUserErrorAsync(Exception exception, long userId, string? additionalText = null, bool shouldSaveInDb = true) =>
+            await SaveErrorAsync(exception, additionalText, shouldSaveInDb, (ex) => ex.ToUserErrorDbo(userId), new USER_ERROR_CUD(), "user-exceptions-log");
 
-        private async Task SaveError<T>(Exception exception, string logName, ICommandRepository<T> repository, T model, bool shouldSaveInDb, string? additionalText = null) 
-            where T : ERROR_BASE
+        private async Task SaveErrorAsync<T>(Exception exception, string? additionalText, bool shouldSaveInDb, Func<Exception, T> createModel, ICommandRepository<T> cudCommand, string logType) 
+            where T : class
         {
             if (exception == null)
                 throw new ArgumentNullException(nameof(exception));
 
+            var model = createModel(exception);
             if (!string.IsNullOrEmpty(additionalText))
-                model.ADDITIONAL_TEXT = additionalText;
+            {
+                var property = model.GetType().GetProperty("ADDITIONAL_TEXT");
+                property?.SetValue(model, additionalText);
+            }
 
             if (shouldSaveInDb)
-                await _databaseLogic.CommandAsync(repository, CommandTypes.Create, model);
+                await _databaseLogic.CommandAsync(cudCommand, CommandTypes.Create, model);
 
             var additionalTextFormatted = string.IsNullOrEmpty(additionalText) ? string.Empty : $"\n{additionalText}";
-            _simpleLogger.Log(JsonConvert.SerializeObject(exception, Formatting.Indented) + additionalTextFormatted, logName);
+            _simpleLogger.Log(JsonConvert.SerializeObject(exception, Formatting.Indented) + additionalTextFormatted, logType);
         }
     }
 }

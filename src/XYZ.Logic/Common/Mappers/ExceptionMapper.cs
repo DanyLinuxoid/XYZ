@@ -9,7 +9,7 @@ namespace XYZ.Logic.Common.Mappers
         {
             return new APP_ERROR()
             {
-                ERROR_MESSAGE = exception.Message,
+                MESSAGE = exception.Message,
                 STACKTRACE = exception.StackTrace ?? string.Empty,
             };
         }
@@ -18,7 +18,7 @@ namespace XYZ.Logic.Common.Mappers
         {
             return new USER_ERROR()
             {
-                ERROR_MESSAGE = exception.Message,
+                MESSAGE = exception.Message,
                 STACKTRACE = exception.StackTrace ?? string.Empty,
                 USER_ID = userId,
             };

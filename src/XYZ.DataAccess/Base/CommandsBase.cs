@@ -46,7 +46,6 @@ namespace XYZ.DataAccess.Base
         /// <summary>
         /// Async command to create record in database.
         /// </summary>
-        /// <param name="session">Actual method container.</param>
         /// <param name="dbo">Model to create.</param>
         /// <returns>Execution result which contains created row id or error message if failed.</returns>
         public virtual async Task<long> CreateAsync(T dbo, IDatabaseCommandExecutionLogic databaseCommandExecutionLogic)
