@@ -6,13 +6,23 @@ using XYZ.DataAccess.Interfaces;
 namespace XYZ.DataAccess.Logic
 {
     /// <summary>
-    /// Database operations first layer.
+    /// Database operations first layer, wrapper for CUD + Query (separated).
     /// </summary>
     public class DatabaseLogic : IDatabaseLogic
     {
+        /// <summary>
+        /// CUD operations core logic.
+        /// </summary>
         private IDatabaseCommandExecutionLogic _databaseCommandExecutionLogic;
+
+        /// <summary>
+        /// Query execution core logic.
+        /// </summary>
         private IDatabaseQueryExecutionLogic _databaseQueryExecutionLogic;
 
+        /// <summary>
+        /// Database operations first layer, wrapper for CUD + Query (separated).
+        /// </summary>
         public DatabaseLogic(IDatabaseCommandExecutionLogic databaseCommandExecutionLogic, IDatabaseQueryExecutionLogic databaseQueryExecutionLogic)
         {
             _databaseCommandExecutionLogic = databaseCommandExecutionLogic;
@@ -20,7 +30,7 @@ namespace XYZ.DataAccess.Logic
         }
 
         /// <summary>
-        /// Async query to database.
+        /// Async query to database (Wrapper).
         /// </summary>
         /// <typeparam name="T">Type of object.</typeparam>
         /// <param name="sqlQuery">Query.</param>
@@ -31,7 +41,7 @@ namespace XYZ.DataAccess.Logic
         }
 
         /// <summary>
-        /// Async command to database.
+        /// Async command to database (Wrapper).
         /// </summary>
         /// <typeparam name="T">Type of object.</typeparam>
         /// <param name="command">Command to execute.</param>

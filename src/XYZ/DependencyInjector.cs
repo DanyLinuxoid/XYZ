@@ -16,7 +16,7 @@ namespace XYZ.Web
     public static class DependencyInjector
     {
         /// <summary>
-        /// Registers all classes and returns container
+        /// Registers all classes and returns container.
         /// </summary>
         /// <returns>Container with registered classes</returns>
         public static void RegisterClasses(IServiceCollection services, IConfiguration config)
@@ -27,6 +27,12 @@ namespace XYZ.Web
             InjectAutomatic(interfaceToClassForInjection, services, config);
         }
 
+        /// <summary>
+        ///  Automatic injection, works only if all interfaces are stored in one place.
+        /// </summary>
+        /// <param name="injectedClases">Class to inject</param>
+        /// <param name="services">Asp Collection</param>
+        /// <param name="configuration">Asp Configuration</param>
         public static void InjectAutomatic(Dictionary<Type, Type> injectedClases, IServiceCollection services, IConfiguration configuration)
         {
             foreach (var classWithInterfacePair in injectedClases)
@@ -43,7 +49,7 @@ namespace XYZ.Web
         }
 
         /// <summary>
-        /// Manual injection of services // Addional configuration
+        /// Manual injection of services + Addional configuration.
         /// </summary>
         private static void InjectManual(IServiceCollection services, IConfiguration configuration)
         {
@@ -54,6 +60,11 @@ namespace XYZ.Web
             services.AddSingleton<IBillingGatewayFactory, BillingGatewayFactory>();
         }
 
+        /// <summary>
+        /// Pure db related services configuration.
+        /// </summary>
+        /// <param name="services">Asp services</param>
+        /// <param name="configuration">Asp collection</param>
         private static void ConfigureDb(IServiceCollection services, IConfiguration configuration)
         {
             services.AddSingleton<IDatabaseLogic, DatabaseLogic>();

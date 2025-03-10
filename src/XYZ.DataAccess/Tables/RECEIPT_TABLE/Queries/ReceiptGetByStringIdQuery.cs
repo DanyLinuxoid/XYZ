@@ -3,10 +3,19 @@ using XYZ.DataAccess.Interfaces;
 
 namespace XYZ.DataAccess.Tables.RECEIPT_TABLE.Queries
 {
+    /// <summary>
+    /// Gets receipt information by main identifier.
+    /// </summary>
     public class ReceiptGetByStringIdQuery : QueryBase<RECEIPT>, IQuery<RECEIPT?>
     {
+        /// <summary>
+        /// Main identifier.
+        /// </summary>
         private string _id;
 
+        /// <summary>
+        /// Gets receipt information by main identifier.
+        /// </summary>
         public ReceiptGetByStringIdQuery(string id)
         {
             _id = id;

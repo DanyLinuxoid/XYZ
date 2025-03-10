@@ -2,8 +2,17 @@
 
 namespace XYZ.Logic.Common.Interfaces
 {
+    /// <summary>
+    /// Main billing gateway factory class for payment API's.
+    /// </summary>
     public interface IBillingGatewayFactory
     {
-        IPaymentGatewayLogic GetGatewayLogic(GatewayType gatewayType);
+        /// <summary>
+        /// Gets gateway logic based on type.
+        /// </summary>
+        /// <param name="gatewayType">Gateway API type.</param>
+        /// <returns>Related gateway.</returns>
+        /// <exception cref="ArgumentOutOfRangeException">If gateway value not found in enum.</exception>
+        IPaymentGatewayLogic GetGatewayLogic(PaymentGatewayType gatewayType);
     }
 }

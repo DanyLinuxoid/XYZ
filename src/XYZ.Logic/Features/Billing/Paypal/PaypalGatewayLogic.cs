@@ -10,13 +10,36 @@ using XYZ.Models.Features.Billing.Data.Order.Order;
 
 namespace XYZ.Logic.Features.Billing.Paypal
 {
+    /// <summary>
+    /// Gateway specific logic.
+    /// </summary>
     public class PaypalGatewayLogic : GatewayLogicBase<PaypalOrderInfo, PaypalOrderResult>, IPaypalGatewayLogic
     {
+        /// <summary>
+        /// Main order logic.
+        /// </summary>
         private readonly IOrderLogic _orderLogic;
+
+        /// <summary>
+        /// Database access.
+        /// </summary>
         private readonly IDatabaseLogic _databaseLogic;
 
-        protected override GatewayType _gatewayType { get; } = GatewayType.PayPal;
+        /// <summary>
+        /// Gateway type.
+        /// </summary>
+        protected override PaymentGatewayType _gatewayType { get; } = PaymentGatewayType.PayPal;
 
+        /// <summary>
+        /// Gateway specific constructor.
+        /// </summary>
+        /// <param name="paypalApiLogic">Paypal direct API logic.</param>
+        /// <param name="paypalMapperLogic">Paypal objects mapper.</param>
+        /// <param name="paypalOrderSavingLogic">Paypal specific order logic.</param>
+        /// <param name="exceptionSaverLogic">Exception saving.</param>
+        /// <param name="simpleLogger">Logger to be used in base.</param>
+        /// <param name="orderLogic">Main order logic.</param>
+        /// <param name="databaseLogic">Database access.</param>
         public PaypalGatewayLogic(
             ISimpleLogger logger,
             IPaypalApiLogic<PaypalOrderInfo, PaypalOrderResult> paypalApiLogic,
@@ -31,6 +54,13 @@ namespace XYZ.Logic.Features.Billing.Paypal
             _databaseLogic = databaseLogic;
         }
 
+        /// <summary>
+        /// Main gateway public access entrypoint.
+        /// </summary>
+        /// <param name="order">Generic order from logic.</param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentNullException">Is thrown if null parameters.</exception>
+        /// <exception cref="InvalidOperationException">Is thrown when order cannot be processed.</exception>
         public async Task<OrderResult> GetGatewayOrderProcessResultAsync(OrderInfo order)
         {
             if (order == null)

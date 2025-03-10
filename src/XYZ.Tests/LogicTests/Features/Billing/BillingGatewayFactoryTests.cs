@@ -18,7 +18,7 @@ namespace XYZ.Tests.Logic.Billing.Factory
             var factory = new BillingGatewayFactory(mockPaypalLogic.Object, mockPayseraLogic.Object);
 
             // Act
-            var result = factory.GetGatewayLogic(GatewayType.PayPal);
+            var result = factory.GetGatewayLogic(PaymentGatewayType.PayPal);
 
             // Assert
             Assert.Equal(mockPaypalLogic.Object, result);
@@ -34,7 +34,7 @@ namespace XYZ.Tests.Logic.Billing.Factory
             var factory = new BillingGatewayFactory(mockPaypalLogic.Object, mockPayseraLogic.Object);
 
             // Act
-            var result = factory.GetGatewayLogic(GatewayType.Paysera);
+            var result = factory.GetGatewayLogic(PaymentGatewayType.Paysera);
 
             // Assert
             Assert.Equal(mockPayseraLogic.Object, result);
@@ -50,7 +50,7 @@ namespace XYZ.Tests.Logic.Billing.Factory
             var factory = new BillingGatewayFactory(mockPaypalLogic.Object, mockPayseraLogic.Object);
 
             // Act & Assert
-            Assert.Throws<ArgumentOutOfRangeException>(() => factory.GetGatewayLogic((GatewayType)999));
+            Assert.Throws<ArgumentOutOfRangeException>(() => factory.GetGatewayLogic((PaymentGatewayType)999));
         }
     }
 }

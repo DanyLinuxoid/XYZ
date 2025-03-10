@@ -16,10 +16,10 @@ namespace XYZ.Tests.LogicTests.Features.User
                 DB_RECORD_CREATION_TIME = new DateTime(2021, 1, 1)
             };
 
-            var expectedDto = new UserInfoShort
+            var expectedDto = new UserDto
             {
                 Id = user.ID,
-                AccountCreationDateTime = user.DB_RECORD_CREATION_TIME
+                CreationTime = user.DB_RECORD_CREATION_TIME
             };
 
             // Act
@@ -27,7 +27,7 @@ namespace XYZ.Tests.LogicTests.Features.User
 
             // Assert
             Assert.Equal(expectedDto.Id, result.Id);
-            Assert.Equal(expectedDto.AccountCreationDateTime, result.AccountCreationDateTime);
+            Assert.Equal(expectedDto.CreationTime, result.CreationTime);
         }
     }
 }

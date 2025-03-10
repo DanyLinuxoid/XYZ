@@ -6,10 +6,17 @@ using XYZ.Models.Common.Enums;
 
 namespace XYZ.Logic.Common.Api.Paypal
 {
+    /// <summary>
+    /// Main logic to access Paypal API directly.
+    /// </summary>
     public class PaypalApiLogic : IPaypalApiLogic<PaypalOrderInfo, PaypalOrderResult>
     {
-        private const GatewayType _gatewayType = GatewayType.PayPal;
-
+        /// <summary>
+        /// Process Paypal order and gets result.
+        /// </summary>
+        /// <param name="paypalOrderInfo">Paypal specific order.</param>
+        /// <returns>Paypal order processing result.</returns>
+        /// <exception cref="ArgumentNullException">Thrown if parameters are null.</exception>
         public async Task<PaypalOrderResult> GetProcessedOrderResultAsync(PaypalOrderInfo paypalOrderInfo)
         {
             await Task.Delay(100); // Http delay +/-
@@ -26,6 +33,10 @@ namespace XYZ.Logic.Common.Api.Paypal
             };
         }
 
+        /// <summary>
+        /// Testing method that stores testing data.
+        /// </summary>
+        /// <returns>Simulated http result.</returns>
         private string GetHttpProcessingTestResult() =>
             @"
             {

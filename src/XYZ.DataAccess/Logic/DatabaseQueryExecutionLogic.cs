@@ -8,6 +8,9 @@ using XYZ.DataAccess.Interfaces;
 
 namespace XYZ.DataAccess.Logic
 {
+    /// <summary>
+    /// Core query execution logic.
+    /// </summary>
     public class DatabaseQueryExecutionLogic : IDatabaseQueryExecutionLogic
     {
         /// <summary>
@@ -15,6 +18,9 @@ namespace XYZ.DataAccess.Logic
         /// </summary>
         private string _connectionString { get; }
 
+        /// <summary>
+        /// Core query execution logic.
+        /// </summary>
         public DatabaseQueryExecutionLogic(string connectionString)
         {
             _connectionString = connectionString;

@@ -7,10 +7,17 @@ using XYZ.Models.Common.ExceptionHandling;
 
 namespace XYZ.Logic.Common.Api.Paysera
 {
+    /// <summary>
+    /// Main logic to access Paysera API directly.
+    /// </summary>
     public class PayseraApiLogic : IPayseraApiLogic<PayseraOrderInfo, PayseraOrderResult>
     {
-        private const GatewayType _gatewayType = GatewayType.Paysera;
-
+        /// <summary>
+        /// Process Paysera order and gets result.
+        /// </summary>
+        /// <param name="paypalOrderInfo">Paysera specific order.</param>
+        /// <returns>Paysera order processing result.</returns>
+        /// <exception cref="ArgumentNullException">Thrown if parameters are null.</exception>
         public async Task<PayseraOrderResult> GetProcessedOrderResultAsync(PayseraOrderInfo paypalOrderInfo)
         {
             await Task.Delay(100); // Http delay +/-
@@ -24,11 +31,15 @@ namespace XYZ.Logic.Common.Api.Paysera
             {
                 IsSuccess = isSuccess,
                 GatewayTransactionId = jsonResult.PayseraTransactionId,
-                ProblemDetails = isSuccess ? null : new ProblemDetailed($"{_gatewayType} Api failed to process order {paypalOrderInfo.OrderNumber}", jsonResult.ErrorReason),
+                ProblemDetails = isSuccess ? null : new ProblemDetailed($"{PaymentGatewayType.Paysera} Api failed to process order {paypalOrderInfo.OrderNumber}", jsonResult.ErrorReason),
                 OrderStatus = isSuccess ? OrderStatus.Completed : OrderStatus.Failed
             };
         }
 
+        /// <summary>
+        /// Testing method that stores testing data.
+        /// </summary>
+        /// <returns>Simulated http result.</returns>
         private string GetHttpProcessingTestResult() =>
             @"
             {

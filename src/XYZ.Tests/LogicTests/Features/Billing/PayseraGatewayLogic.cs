@@ -45,7 +45,6 @@ namespace XYZ.Tests.Logic.Features.Billing.Paysera
             _databaseLogicMock = new Mock<IDatabaseLogic>();
 
             _payseraGatewayLogic = new PayseraGatewayLogic(
-                _simpleLoggerMock.Object,
                 _payseraApiLogicMock.Object,
                 _payseraMapperLogicMock.Object,
                 _payseraOrderSavingLogicMock.Object,

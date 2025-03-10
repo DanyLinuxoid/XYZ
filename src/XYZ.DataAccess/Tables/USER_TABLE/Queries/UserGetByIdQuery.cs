@@ -4,10 +4,19 @@ using XYZ.DataAccess.Tables.USER_TABLE;
 
 namespace XYZ.DataAccess.Tables.USER_TBL.Queries
 {
+    /// <summary>
+    /// Gets user by main identifier.
+    /// </summary>
     public class UserGetByIdQuery : QueryBase<USER>, IQuery<USER?>
     {
+        /// <summary>
+        /// Main identifier.
+        /// </summary>
         private long _id;
 
+        /// <summary>
+        /// Gets user by main identifier.
+        /// </summary>
         public UserGetByIdQuery(long id)
         {
             _id = id;

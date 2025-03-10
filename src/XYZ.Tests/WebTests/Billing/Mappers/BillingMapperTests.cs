@@ -15,7 +15,7 @@ namespace XYZ.Tests.Mappers
                 Description = "Test Order",
                 OrderNumber = 12345,
                 PayableAmount = 99.99m,
-                PaymentGateway = GatewayType.PayPal,
+                PaymentGateway = PaymentGatewayType.PayPal,
                 UserId = 67890
             };
 
@@ -40,7 +40,7 @@ namespace XYZ.Tests.Mappers
                 Description = null,
                 OrderNumber = 54321,
                 PayableAmount = 49.99m,
-                PaymentGateway = GatewayType.PayPal,
+                PaymentGateway = PaymentGatewayType.PayPal,
                 UserId = 98765
             };
 

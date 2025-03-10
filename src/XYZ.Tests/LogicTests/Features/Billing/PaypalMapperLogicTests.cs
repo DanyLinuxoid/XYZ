@@ -35,7 +35,7 @@ namespace XYZ.Tests.Logic.Features.Billing.Paypal
             Assert.Equal(orderInfo.UserId, result.UserId);
             Assert.Equal(orderInfo.Description, result.Description);
             Assert.Equal(orderInfo.PayableAmount, result.PayableAmount);
-            Assert.Equal(GatewayType.PayPal, result.PaymentGateway);
+            Assert.Equal(PaymentGatewayType.PayPal, result.PaymentGateway);
             Assert.Equal(orderInfo.OrderStatus, result.OrderStatus);
         }
 

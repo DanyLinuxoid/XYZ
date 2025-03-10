@@ -4,8 +4,16 @@ using XYZ.Models.Features.Billing.Data.Dto;
 
 namespace XYZ.Logic.Features.Billing.Mappers
 {
+    /// <summary>
+    /// Simple dto<->dbo mapping for orders.
+    /// </summary>
     public static class OrderDtoMapper
     {
+        /// <summary>
+        /// Maps dbo order to dto for db saving.
+        /// </summary>
+        /// <param name="dto">Dto order.</param>
+        /// <returns>Dto order.</returns>
         public static ORDER ToDbo(this OrderDto dto)
         {
             return new ORDER()
@@ -20,6 +28,11 @@ namespace XYZ.Logic.Features.Billing.Mappers
             };
         }
 
+        /// <summary>
+        /// Maps dbo order to dto.
+        /// </summary>
+        /// <param name="dbo">Dbo receipt.</param>
+        /// <returns>Dto receipt.</returns>
         public static OrderDto ToDto(this ORDER dbo)
         {
             return new OrderDto()

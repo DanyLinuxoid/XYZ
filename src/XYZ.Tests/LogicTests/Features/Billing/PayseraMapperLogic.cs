@@ -24,7 +24,7 @@ namespace XYZ.Tests.LogicTests.Features.Billing
                 UserId = 12345,
                 Description = "Sample Order",
                 PayableAmount = 100.50m,
-                PaymentGateway = GatewayType.Paysera
+                PaymentGateway = PaymentGatewayType.Paysera
             };
 
             // Act
@@ -36,7 +36,7 @@ namespace XYZ.Tests.LogicTests.Features.Billing
             Assert.Equal(order.UserId, result.UserId);
             Assert.Equal(order.Description, result.Description);
             Assert.Equal(order.PayableAmount, result.PayableAmount);
-            Assert.Equal(GatewayType.Paysera, result.PaymentGateway);
+            Assert.Equal(PaymentGatewayType.Paysera, result.PaymentGateway);
         }
 
         [Fact]
@@ -49,7 +49,7 @@ namespace XYZ.Tests.LogicTests.Features.Billing
                 UserId = 12345,
                 Description = "Sample Order",
                 PayableAmount = 100.50m,
-                PaymentGateway = GatewayType.Paysera
+                PaymentGateway = PaymentGatewayType.Paysera
             };
 
             // Act

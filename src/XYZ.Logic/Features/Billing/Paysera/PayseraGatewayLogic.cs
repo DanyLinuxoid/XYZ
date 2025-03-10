@@ -10,15 +10,37 @@ using XYZ.Models.Features.Billing.Data.Order.Order;
 
 namespace XYZ.Logic.Features.Billing.Paysera
 {
+    /// <summary>
+    /// Gateway specific logic.
+    /// </summary>
     public class PayseraGatewayLogic : GatewayLogicBase<PayseraOrderInfo, PayseraOrderResult>, IPayseraGatewayLogic
     {
+        /// <summary>
+        /// Main order logic.
+        /// </summary>
         private readonly IOrderLogic _orderLogic;
+
+        /// <summary>
+        /// Database access.
+        /// </summary>
         private readonly IDatabaseLogic _databaseLogic;
 
-        protected override GatewayType _gatewayType { get; } = GatewayType.Paysera;
+        /// <summary>
+        /// Gateway type.
+        /// </summary>
+        protected override PaymentGatewayType _gatewayType { get; } = PaymentGatewayType.Paysera;
 
+        /// <summary>
+        /// Gateway specific constructor.
+        /// </summary>
+        /// <param name="payseraApiLogic">Paysera direct API logic.</param>
+        /// <param name="payseraMapperLogic">Paysera objects mapper.</param>
+        /// <param name="payseraOrderSavingLogic">Paysera specific order logic.</param>
+        /// <param name="exceptionSaverLogic">Exception saving.</param>
+        /// <param name="simpleLogger">Logger to be used in base.</param>
+        /// <param name="orderLogic">Main order logic.</param>
+        /// <param name="databaseLogic">Database access.</param>
         public PayseraGatewayLogic(
-            ISimpleLogger logger,
             IPayseraApiLogic<PayseraOrderInfo, PayseraOrderResult> payseraApiLogic,
             IOrderMapperLogic<PayseraOrderInfo> payseraMapperLogic,
             IPayseraGatewayOrderSavingLogic payseraOrderSavingLogic,
@@ -31,6 +53,13 @@ namespace XYZ.Logic.Features.Billing.Paysera
             _databaseLogic = databaseLogic;
         }
 
+        /// <summary>
+        /// Main gateway public access entrypoint.
+        /// </summary>
+        /// <param name="order">Generic order from logic.</param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentNullException">Is thrown if null parameters.</exception>
+        /// <exception cref="InvalidOperationException">Is thrown when order cannot be processed.</exception>
         public async Task<OrderResult> GetGatewayOrderProcessResultAsync(OrderInfo order)
         {
             if (order == null)

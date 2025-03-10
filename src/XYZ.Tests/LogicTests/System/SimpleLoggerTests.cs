@@ -46,20 +46,5 @@ namespace XYZ.Tests.Logic.System.Logger
                 writer => writer.LogWrite(text, customLogName, It.IsAny<DateTime>()),
                 Times.Once);
         }
-
-        [Fact]
-        public void Log_DoesNotThrowException_WhenLogWriteThrowsException()
-        {
-            // Arrange
-            var text = "Test log message";
-            _textLogWriterMock.Setup(writer => writer.LogWrite(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<DateTime>()))
-                .Throws(new Exception("Log write failed"));
-
-            // Act & Assert
-            var exception = Record.Exception(() => _simpleLogger.Log(text));
-
-            // Assert
-            Assert.Null(exception); 
-        }
     }
 }

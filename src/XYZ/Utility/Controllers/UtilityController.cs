@@ -4,6 +4,9 @@ using XYZ.Logic.Common.Interfaces;
 
 namespace XYZ.Web.Utility.Controllers
 {
+    /// <summary>
+    /// Controller for utilities and service/stability checks.
+    /// </summary>
     [ApiController]
     [Route("api/utility")]
     public class UtilityController : Controller
@@ -15,13 +18,22 @@ namespace XYZ.Web.Utility.Controllers
             _smokeTestLogic = smokeTestLogic;
         }
 
+        /// <summary>
+        /// Simple ping.
+        /// </summary>
+        /// <returns>Ok if service available.</returns>
         [HttpGet("ping")]
         public IActionResult Ping()
         {
             return Ok();
         }
 
-        [HttpPost("smoketest")] // This should not be available for public/API use, auth/internal only, but we will skip this part for the sake of ease/access.
+        /// <summary>
+        /// Various methods to smoketest system and check if it is operational.
+        /// NOTE: This should not be available for public/API use, auth/internal only, but we will skip this part for the sake of ease/access.
+        /// </summary>
+        /// <returns>Boolean stating if system is ready.</returns>
+        [HttpPost("smoketest")] 
         public async Task<IActionResult> SmokeTest()
         {
             var result = await _smokeTestLogic.IsSystemFunctional();

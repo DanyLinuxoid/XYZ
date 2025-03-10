@@ -8,17 +8,48 @@ using XYZ.Models.Features.Billing.Validation;
 
 namespace XYZ.Logic.Features.Billing.Base
 {
+    /// <summary>
+    /// Shared gateway logic accross all gateways, contains general logic.
+    /// </summary>
+    /// <typeparam name="TInput"></typeparam>
+    /// <typeparam name="TOutput"></typeparam>
     public abstract class GatewayLogicBase<TInput, TOutput>
         where TInput : OrderInfo
         where TOutput : OrderResult, new()
     {
+        /// <summary>
+        /// General gateway order saving logic,
+        /// </summary>
         protected readonly IGatewayOrderSavingLogic _gatewayOrderSavingLogic;
+
+        /// <summary>
+        /// General order mapping logic.
+        /// </summary>
         protected readonly IOrderMapperLogic<TInput> _mapper;
 
+        /// <summary>
+        /// File logging logic.
+        /// </summary>
         private readonly ISimpleLogger _simpleLogger;
+
+        /// <summary>
+        /// Gateway general api logic.
+        /// </summary>
         private readonly IApiOrderLogic<TInput, TOutput> _apiOrderLogic;
+
+        /// <summary>
+        /// Exception saving logic.
+        /// </summary>
         private readonly IExceptionSaverLogic _exceptionSaverLogic;
 
+        /// <summary>
+        /// Shared gateway logic accross all gateways, contains general logic.
+        /// </summary>
+        /// <param name="simpleLogger">File logging logic.</param>
+        /// <param name="apiOrderLogic">Gateway general api logic.</param>
+        /// <param name="gatewayOrderSavingLogic">Gateway general api logic.</param>
+        /// <param name="exceptionSaverLogic">Exception saving logic.</param>
+        /// <param name="mapper">General order mapping logic.</param>
         public GatewayLogicBase(
             ISimpleLogger simpleLogger, 
             IApiOrderLogic<TInput, TOutput> apiOrderLogic, 
@@ -33,8 +64,16 @@ namespace XYZ.Logic.Features.Billing.Base
             _mapper = mapper;
         }
 
-        protected abstract GatewayType _gatewayType { get; }
+        /// <summary>
+        /// Specific gateway logic.
+        /// </summary>
+        protected abstract PaymentGatewayType _gatewayType { get; }
 
+        /// <summary>
+        /// General order validation logic,
+        /// </summary>
+        /// <param name="order">Specific gateway order.</param>
+        /// <returns>Order result.</returns>
         protected virtual TOutput ValidateOrder(TInput order)
         {
             var validationResult = GetOrderValidationResult(order);
@@ -50,6 +89,11 @@ namespace XYZ.Logic.Features.Billing.Base
             return new();
         }
 
+        /// <summary>
+        /// Main processing method.
+        /// </summary>
+        /// <param name="order">Specific order to process.</param>
+        /// <returns>Specific order processing result.</returns>
         protected virtual async Task<TOutput> GetProcessResultAsync(TInput order)
         {
             TOutput outputResult;
@@ -71,6 +115,11 @@ namespace XYZ.Logic.Features.Billing.Base
             }
         }
 
+        /// <summary>
+        /// Shared validation logic for inputs.
+        /// </summary>
+        /// <param name="order">Order to validate.</param>
+        /// <returns>Order validation result.</returns>
         protected virtual OrderValidationResult GetOrderValidationResult(OrderInfo order)
         {
             var result = new OrderValidationResult();
@@ -84,6 +133,11 @@ namespace XYZ.Logic.Features.Billing.Base
             return result;
         }
 
+        /// <summary>
+        /// Wrapper for processing which logs results and calls specific API.
+        /// </summary>
+        /// <param name="order">Specific order that API should process.</param>
+        /// <returns>API processing result.</returns>
         protected virtual async Task<TOutput> GetProcessedOrderResultAsync(TInput order) 
         {
             _simpleLogger.Log($"{PaymentProcessingEvent.PaymentStart} | {_gatewayType} | {nameof(order.UserId)}: {order.UserId} | {nameof(order.OrderNumber)}: {order.OrderNumber}");

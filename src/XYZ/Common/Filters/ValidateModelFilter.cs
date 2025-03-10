@@ -4,13 +4,19 @@ using XYZ.Web.Common.Attributes;
 
 namespace XYZ.Web.Common.Filters
 {
+    /// <summary>
+    /// Filter for ModelState validation.
+    /// </summary>
     public class ValidateModelFilter : IAsyncActionFilter
     {
+        /// <summary>
+        /// Main filter with logic.
+        /// </summary>
+        /// <param name="context">User http context.</param>
+        /// <param name="next">Next execution delegate.</param>
         public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
         {
-            var hasValidateAttribute = context.ActionDescriptor.EndpointMetadata
-                .Any(em => em.GetType() == typeof(ValidateModelAttribute));
-
+            var hasValidateAttribute = context.ActionDescriptor.EndpointMetadata.Any(em => em.GetType() == typeof(ValidateModelAttribute));
             if (hasValidateAttribute || context.ModelState.IsValid)
             {
                 await next();

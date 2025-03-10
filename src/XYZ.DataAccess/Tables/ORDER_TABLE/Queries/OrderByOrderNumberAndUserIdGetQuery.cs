@@ -4,11 +4,24 @@ using XYZ.DataAccess.Tables.ORDER_TABLE;
 
 namespace XYZ.DataAccess.Tables.ORDER_TBL.Queries
 {
+    /// <summary>
+    /// Gets order related to user by order number and user main identifier.
+    /// </summary>
     public class OrderByOrderNumberAndUserIdGetQuery : QueryBase<ORDER>, IQuery<ORDER?>
     {
+        /// <summary>
+        /// User main identifier.
+        /// </summary>
         private long _userId;
+
+        /// <summary>
+        /// Order number (not main id).
+        /// </summary>
         private long _orderNumber;
 
+        /// <summary>
+        /// Gets order related to user by order number and user main identifier.
+        /// </summary>
         public OrderByOrderNumberAndUserIdGetQuery(long userId, long orderNumber)
         {
             _userId = userId;

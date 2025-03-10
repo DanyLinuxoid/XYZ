@@ -1,7 +1,8 @@
-﻿using XYZ.Models.Common.Api.Paysera;
-
-namespace XYZ.Logic.Common.Interfaces
+﻿namespace XYZ.Logic.Common.Interfaces
 {
+    /// <summary>
+    /// Gateway specific order saving logic.
+    /// </summary>
     public interface IPayseraGatewayOrderSavingLogic : IGatewayOrderSavingLogic
     {
     }

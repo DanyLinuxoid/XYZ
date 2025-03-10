@@ -4,8 +4,15 @@ using XYZ.DataAccess.Tables.Base;
 
 namespace XYZ.DataAccess.Base
 {
+    /// <summary>
+    /// Abstract logic that gets reqused accross all commands.
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
     public abstract class CommandsBase<T> where T : TABLE_BASE, new()
     {
+        /// <summary>
+        /// Model that is used during command.
+        /// </summary>
         protected T _tbl { get; set; }
 
         /// <summary>
@@ -94,8 +101,16 @@ namespace XYZ.DataAccess.Base
             return result;
         }
 
+        /// <summary>
+        /// Parameter formatting for update command.
+        /// </summary>
+        /// <returns>Parameters formatted as one string with separator for update command.</returns>
         private string GetUpdateStringFormattedParams() => string.Join(", ", _tbl.TableEntries.Select(col => $"{col.Key} = ISNULL(@{col.Key}, [{col.Key}])"));
 
+        /// <summary>
+        /// Parameter formatting for create command.
+        /// </summary>
+        /// <returns>Parameters formatted as one string with separator for create command.</returns>
         private string GetNormalStringFormattedParams(char separator)
         {
             if (!_tbl.TableEntries.Any())

@@ -7,17 +7,37 @@
 
     using XYZ.Logic.Common.Interfaces;
 
+    /// <summary>
+    /// Middleware to handle unhandled exception during application runtime.
+    /// </summary>
     public class ExceptionHandlingMiddleware
     {
+        /// <summary>
+        /// Delegate to pass execution.
+        /// </summary>
         private readonly RequestDelegate _next;
+
+        /// <summary>
+        /// Logic to save exception.
+        /// </summary>
         private IExceptionSaverLogic _exceptionSaverLogic;
 
+        /// <summary>
+        /// Constructor for exception middleware.
+        /// </summary>
+        /// <param name="next">Next execution delegate.</param>
+        /// <param name="exceptionSaverLogic">Logic to save exceptions.</param>
         public ExceptionHandlingMiddleware(RequestDelegate next, IExceptionSaverLogic exceptionSaverLogic)
         {
             _next = next;
             _exceptionSaverLogic = exceptionSaverLogic;
         }
 
+        /// <summary>
+        /// Main logic that processes requests.
+        /// </summary>
+        /// <param name="context">Http context with user connection.</param>
+        /// <returns>Request execution result.</returns>
         public async Task InvokeAsync(HttpContext context)
         {
             try
@@ -38,6 +58,12 @@
             }
         }
 
+        /// <summary>
+        /// Fallback mechanism to catch application errors.
+        /// </summary>
+        /// <param name="ex">Exception that occured during application runtime.</param>
+        /// <param name="errorCode">Application generated error code for later investigation and event binding.</param>
+        /// <param name="context">Http context.</param>
         private async Task SafeLogExceptionWithFallback(Exception ex, string errorCode, HttpContext context)
         {
             string additionalText =
@@ -67,7 +93,7 @@
                             $"{fileEx.ToString()}\n\n" +
                             $"{additionalText}");
                     }
-                    catch { }
+                    catch { } // Nothing left
                 }
             }
         }

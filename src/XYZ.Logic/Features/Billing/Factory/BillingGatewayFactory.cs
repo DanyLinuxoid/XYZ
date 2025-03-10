@@ -3,22 +3,39 @@ using XYZ.Models.Common.Enums;
 
 namespace XYZ.Logic.Billing.Factory
 {
+    /// <summary>
+    /// Main billing gateway factory class for payment API's.
+    /// </summary>
     public class BillingGatewayFactory : IBillingGatewayFactory
     {
-        private readonly Dictionary<GatewayType, IPaymentGatewayLogic> _gatewayLogics;
+        /// <summary>
+        /// Payment API's container.
+        /// </summary>
+        private readonly Dictionary<PaymentGatewayType, IPaymentGatewayLogic> _gatewayLogics;
 
+        /// <summary>
+        /// Main billing gateway factory constructor for payment API's.
+        /// </summary>
+        /// <param name="paypalLogic">Paypal gateway processing logic.</param>
+        /// <param name="payseraLogic">Paysera gateway processing logic.</param>
         public BillingGatewayFactory(
             IPaypalGatewayLogic paypalLogic, 
             IPayseraGatewayLogic payseraLogic)
         {
-            _gatewayLogics = new Dictionary<GatewayType, IPaymentGatewayLogic>
+            _gatewayLogics = new Dictionary<PaymentGatewayType, IPaymentGatewayLogic>
             {
-                { GatewayType.PayPal, paypalLogic },
-                { GatewayType.Paysera, payseraLogic }
+                { PaymentGatewayType.PayPal, paypalLogic },
+                { PaymentGatewayType.Paysera, payseraLogic }
             };
         }
 
-        public IPaymentGatewayLogic GetGatewayLogic(GatewayType gatewayType)
+        /// <summary>
+        /// Gets gateway logic based on type.
+        /// </summary>
+        /// <param name="gatewayType">Gateway API type.</param>
+        /// <returns>Related gateway.</returns>
+        /// <exception cref="ArgumentOutOfRangeException">If gateway value not found in enum.</exception>
+        public IPaymentGatewayLogic GetGatewayLogic(PaymentGatewayType gatewayType)
         {
             if (_gatewayLogics.TryGetValue(gatewayType, out var gatewayLogic))
                 return gatewayLogic;

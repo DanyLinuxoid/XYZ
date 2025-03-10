@@ -100,8 +100,8 @@ namespace XYZ.Tests.Logic.Features.Billing
                 Description = "12",
                 OrderStatus = OrderStatus.Completed,
             };
-            _userLogicMock.Setup(x => x.GetUserInfoShort(orderInfo.UserId))
-                .ReturnsAsync((UserInfoShort?)null);
+            _userLogicMock.Setup(x => x.GetUserInfo(orderInfo.UserId))
+                .ReturnsAsync((UserDto?)null);
 
             // Act
             var result = await _billingLogic.ProcessOrderAsync(orderInfo);
@@ -110,7 +110,7 @@ namespace XYZ.Tests.Logic.Features.Billing
             Assert.NotNull(result);
             Assert.Null(result.Receipt);
             Assert.NotNull(result.ProblemDetails);
-            Assert.Equal("UserNotFound", result.ProblemDetails.Title);
+            Assert.Equal("User not found", result.ProblemDetails.Title);
         }
 
         [Fact]
@@ -136,8 +136,8 @@ namespace XYZ.Tests.Logic.Features.Billing
             var gatewayLogicMock = new Mock<IPaypalGatewayLogic>();
             gatewayLogicMock.Setup(g => g.GetGatewayOrderProcessResultAsync(It.IsAny<OrderInfo>()))
                 .ReturnsAsync(orderResult);
-            _billingGatewayFactoryMock.Setup(x => x.GetGatewayLogic(It.IsAny<GatewayType>())).Returns(gatewayLogicMock.Object);
-            _userLogicMock.Setup(x => x.GetUserInfoShort(It.IsAny<long>())).Returns(Task.FromResult<UserInfoShort?>(new UserInfoShort()));
+            _billingGatewayFactoryMock.Setup(x => x.GetGatewayLogic(It.IsAny<PaymentGatewayType>())).Returns(gatewayLogicMock.Object);
+            _userLogicMock.Setup(x => x.GetUserInfo(It.IsAny<long>())).Returns(Task.FromResult<UserDto?>(new UserDto()));
 
             // Act
             var result = await _billingLogic.ProcessOrderAsync(orderInfo);
@@ -170,8 +170,8 @@ namespace XYZ.Tests.Logic.Features.Billing
             var gatewayLogicMock = new Mock<IPaypalGatewayLogic>();
             gatewayLogicMock.Setup(g => g.GetGatewayOrderProcessResultAsync(It.IsAny<OrderInfo>()))
                 .ReturnsAsync(orderResult);
-            _billingGatewayFactoryMock.Setup(x => x.GetGatewayLogic(It.IsAny<GatewayType>())).Returns(gatewayLogicMock.Object);
-            _userLogicMock.Setup(x => x.GetUserInfoShort(It.IsAny<long>())).Returns(Task.FromResult<UserInfoShort?>(new UserInfoShort()));
+            _billingGatewayFactoryMock.Setup(x => x.GetGatewayLogic(It.IsAny<PaymentGatewayType>())).Returns(gatewayLogicMock.Object);
+            _userLogicMock.Setup(x => x.GetUserInfo(It.IsAny<long>())).Returns(Task.FromResult<UserDto?>(new UserDto()));
 
             // Act
             var result = await _billingLogic.ProcessOrderAsync(orderInfo);
@@ -204,8 +204,8 @@ namespace XYZ.Tests.Logic.Features.Billing
             var gatewayLogicMock = new Mock<IPaypalGatewayLogic>();
             gatewayLogicMock.Setup(g => g.GetGatewayOrderProcessResultAsync(It.IsAny<OrderInfo>()))
                 .ReturnsAsync(orderResult);
-            _billingGatewayFactoryMock.Setup(x => x.GetGatewayLogic(It.IsAny<GatewayType>())).Returns(gatewayLogicMock.Object);
-            _userLogicMock.Setup(x => x.GetUserInfoShort(It.IsAny<long>())).Returns(Task.FromResult<UserInfoShort?>(new UserInfoShort()));
+            _billingGatewayFactoryMock.Setup(x => x.GetGatewayLogic(It.IsAny<PaymentGatewayType>())).Returns(gatewayLogicMock.Object);
+            _userLogicMock.Setup(x => x.GetUserInfo(It.IsAny<long>())).Returns(Task.FromResult<UserDto?>(new UserDto()));
 
             var expectedReceipt = new ReceiptDto
             {

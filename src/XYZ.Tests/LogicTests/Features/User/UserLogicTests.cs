@@ -29,22 +29,22 @@ namespace XYZ.Tests.LogicTests.Features.User
                 ID = userId,
                 DB_RECORD_CREATION_TIME = DateTime.Now
             };
-            var expectedDto = new UserInfoShort
+            var expectedDto = new UserDto
             {
                 Id = userId,
-                AccountCreationDateTime = user.DB_RECORD_CREATION_TIME
+                CreationTime = user.DB_RECORD_CREATION_TIME
             };
 
             _databaseLogicMock.Setup(x => x.QueryAsync(It.IsAny<UserGetByIdQuery>()))
                 .ReturnsAsync(user);
 
             // Act
-            var result = await _userLogic.GetUserInfoShort(userId);
+            var result = await _userLogic.GetUserInfo(userId);
 
             // Assert
             Assert.NotNull(result);
             Assert.Equal(expectedDto.Id, result.Id);
-            Assert.Equal(expectedDto.AccountCreationDateTime, result.AccountCreationDateTime);
+            Assert.Equal(expectedDto.CreationTime, result.CreationTime);
             _databaseLogicMock.Verify(x => x.QueryAsync(It.IsAny<UserGetByIdQuery>()), Times.Once);
         }
 
@@ -57,7 +57,7 @@ namespace XYZ.Tests.LogicTests.Features.User
                 .ReturnsAsync((USER?)null);
 
             // Act
-            var result = await _userLogic.GetUserInfoShort(userId);
+            var result = await _userLogic.GetUserInfo(userId);
 
             // Assert
             Assert.Null(result);

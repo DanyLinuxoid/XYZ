@@ -89,7 +89,7 @@ namespace XYZ.Tests.Validation
                 PayableAmount = 10.5m,
                 OrderNumber = 123,
                 UserId = 456,
-                PaymentGateway = GatewayType.PayPal,
+                PaymentGateway = PaymentGatewayType.PayPal,
                 Description = "Test Payment"
             };
 
