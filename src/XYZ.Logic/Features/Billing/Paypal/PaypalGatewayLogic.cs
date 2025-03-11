@@ -22,16 +22,6 @@ namespace XYZ.Logic.Features.Billing.Paypal
         private readonly IOrderLogic _orderLogic;
 
         /// <summary>
-        /// Gateway specific order saving
-        /// </summary>
-        private readonly IGatewayOrderSavingLogic<PAYPAL_GATEWAY_ORDER> _gatewayOrderSavingLogic;
-
-        /// <summary>
-        /// Database access.
-        /// </summary>
-        private readonly IDatabaseLogic _databaseLogic;
-
-        /// <summary>
         /// Specific gateway type
         /// </summary>
         public override PaymentGatewayType GatewayType => PaymentGatewayType.PayPal;
@@ -41,7 +31,6 @@ namespace XYZ.Logic.Features.Billing.Paypal
         /// </summary>
         /// <param name="paypalApiLogic">Paypal direct API logic.</param>
         /// <param name="paypalMapperLogic">Paypal objects mapper.</param>
-        /// <param name="paypalOrderSavingLogic">Paypal specific order logic.</param>
         /// <param name="exceptionSaverLogic">Exception saving.</param>
         /// <param name="simpleLogger">Logger to be used in base.</param>
         /// <param name="orderLogic">Main order logic.</param>
@@ -50,15 +39,12 @@ namespace XYZ.Logic.Features.Billing.Paypal
             ISimpleLogger logger,
             IApiOrderLogic<PaypalOrderInfo, PaypalOrderResult> paypalApiLogic,
             IOrderMapperLogic<PaypalOrderInfo> paypalMapperLogic,
-            IGatewayOrderSavingLogic<PAYPAL_GATEWAY_ORDER> paypalOrderSavingLogic,
             IExceptionSaverLogic exceptionSaverLogic,
             ISimpleLogger simpleLogger,
             IOrderLogic orderLogic,
-            IDatabaseLogic databaseLogic) : base(simpleLogger, paypalApiLogic, exceptionSaverLogic, paypalMapperLogic)
+            IDatabaseLogic databaseLogic) : base(simpleLogger, paypalApiLogic, exceptionSaverLogic, paypalMapperLogic, databaseLogic)
         {
             _orderLogic = orderLogic;
-            _databaseLogic = databaseLogic;
-            _gatewayOrderSavingLogic = paypalOrderSavingLogic;
         }
 
         /// <summary>
@@ -81,7 +67,7 @@ namespace XYZ.Logic.Features.Billing.Paypal
 
             ORDER? orderFull = await _databaseLogic.QueryAsync(new OrderByOrderNumberAndUserIdGetQuery(order.UserId, order.OrderNumber));
             if (orderFull?.PAYSERA_ORDER_ID != null) // We allow manipulations on existing order only if it's not finished
-                throw new InvalidOperationException($"Order with number {order.OrderNumber} is not binded with {GatewayType}");
+                throw new InvalidOperationException($"Order with number {order.OrderNumber} is not bound with {GatewayType}");
             else if (orderFull?.ORDER_STATUS == (int)OrderStatus.Completed) // We disallow gateway switching on established orders
                 throw new InvalidOperationException($"Order with number {order.OrderNumber} is in status {OrderStatus.Completed}.");
 
@@ -89,7 +75,7 @@ namespace XYZ.Logic.Features.Billing.Paypal
 
             var mappedDto = _mapper.ToMappedOrderDto(mappedOrder);
             mappedDto.OrderStatus = result.OrderStatus;
-            mappedDto.PaypalOrderId = orderFull == null ? await _gatewayOrderSavingLogic.SaveOrder(new PAYPAL_GATEWAY_ORDER()) : orderFull.PAYPAL_ORDER_ID;
+            mappedDto.PaypalOrderId = orderFull == null ? await SaveOrder(new PAYPAL_GATEWAY_ORDER_CUD()) : orderFull.PAYPAL_ORDER_ID;
             if (orderFull == null) // If new order and didn't fail earlier
                 await _orderLogic.SaveOrder(mappedDto);
             else

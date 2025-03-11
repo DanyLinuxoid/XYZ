@@ -22,21 +22,15 @@ namespace XYZ.Logic.Features.Billing.Paysera
         private readonly IOrderLogic _orderLogic;
 
         /// <summary>
-        /// Gateway specific order saving
+        /// Specific gateway type
         /// </summary>
-        private readonly IGatewayOrderSavingLogic<PAYSERA_GATEWAY_ORDER> _gatewayOrderSavingLogic;
-
-        /// <summary>
-        /// Database access.
-        /// </summary>
-        private readonly IDatabaseLogic _databaseLogic;
+        public override PaymentGatewayType GatewayType => PaymentGatewayType.Paysera;
 
         /// <summary>
         /// Gateway specific constructor.
         /// </summary>
         /// <param name="payseraApiLogic">Paysera direct API logic.</param>
         /// <param name="payseraMapperLogic">Paysera objects mapper.</param>
-        /// <param name="payseraOrderSavingLogic">Paysera specific order logic.</param>
         /// <param name="exceptionSaverLogic">Exception saving.</param>
         /// <param name="simpleLogger">Logger to be used in base.</param>
         /// <param name="orderLogic">Main order logic.</param>
@@ -44,21 +38,13 @@ namespace XYZ.Logic.Features.Billing.Paysera
         public PayseraGatewayLogic(
             IApiOrderLogic<PayseraOrderInfo, PayseraOrderResult> payseraApiLogic,
             IOrderMapperLogic<PayseraOrderInfo> payseraMapperLogic,
-            IGatewayOrderSavingLogic<PAYSERA_GATEWAY_ORDER> payseraOrderSavingLogic,
             IExceptionSaverLogic exceptionSaverLogic,
             ISimpleLogger simpleLogger,
             IOrderLogic orderLogic,
-            IDatabaseLogic databaseLogic) : base(simpleLogger, payseraApiLogic, exceptionSaverLogic, payseraMapperLogic)
+            IDatabaseLogic databaseLogic) : base(simpleLogger, payseraApiLogic, exceptionSaverLogic, payseraMapperLogic, databaseLogic)
         {
             _orderLogic = orderLogic;
-            _databaseLogic = databaseLogic;
-            _gatewayOrderSavingLogic = payseraOrderSavingLogic;
         }
-
-        /// <summary>
-        /// Specific gateway type
-        /// </summary>
-        public override PaymentGatewayType GatewayType => PaymentGatewayType.Paysera;
 
         /// <summary>
         /// Main gateway public access entrypoint.
@@ -80,7 +66,7 @@ namespace XYZ.Logic.Features.Billing.Paysera
 
             ORDER? orderFull = await _databaseLogic.QueryAsync(new OrderByOrderNumberAndUserIdGetQuery(order.UserId, order.OrderNumber));
             if (orderFull?.PAYPAL_ORDER_ID != null) // We allow manipulations on existing order only if it's not finished
-                throw new InvalidOperationException($"Order with number {order.OrderNumber} is not binded with {GatewayType}");
+                throw new InvalidOperationException($"Order with number {order.OrderNumber} is not bound with {GatewayType}");
             else if (orderFull?.ORDER_STATUS == (int)OrderStatus.Completed) // We disallow gateway switching
                 throw new InvalidOperationException($"Order with number {order.OrderNumber} is in status {OrderStatus.Completed} (Finished)");
 
@@ -88,7 +74,7 @@ namespace XYZ.Logic.Features.Billing.Paysera
 
             var mappedDto = _mapper.ToMappedOrderDto(mappedOrder);
             mappedDto.OrderStatus = result.OrderStatus;
-            mappedDto.PayseraOrderId = orderFull == null ? await _gatewayOrderSavingLogic.SaveOrder(new PAYSERA_GATEWAY_ORDER()) : orderFull.PAYSERA_ORDER_ID;
+            mappedDto.PayseraOrderId = orderFull == null ? await SaveOrder(new PAYSERA_GATEWAY_ORDER_CUD()) : orderFull.PAYSERA_ORDER_ID;
             if (orderFull == null) // If new order and didn't fail earlier
                 await _orderLogic.SaveOrder(mappedDto);
             else

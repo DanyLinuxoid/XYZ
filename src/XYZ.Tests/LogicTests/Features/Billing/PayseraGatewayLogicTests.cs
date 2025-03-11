@@ -3,7 +3,6 @@
 using XYZ.DataAccess.Interfaces;
 using XYZ.DataAccess.Tables.ORDER_TABLE;
 using XYZ.DataAccess.Tables.ORDER_TBL.Queries;
-using XYZ.DataAccess.Tables.PAYSERA_ORDER_TABLE;
 using XYZ.Logic.Common.Interfaces;
 using XYZ.Logic.Features.Billing.Paysera;
 using XYZ.Models.Common.Api.Paysera;
@@ -19,7 +18,6 @@ namespace XYZ.Tests.Logic.Features.Billing.Paysera
         private readonly Mock<ISimpleLogger> _simpleLoggerMock;
         private readonly Mock<IApiOrderLogic<PayseraOrderInfo, PayseraOrderResult>> _payseraApiLogicMock;
         private readonly Mock<IOrderMapperLogic<PayseraOrderInfo>> _payseraMapperLogicMock;
-        private readonly Mock<IGatewayOrderSavingLogic<PAYSERA_GATEWAY_ORDER>> _payseraOrderSavingLogicMock;
         private readonly Mock<IExceptionSaverLogic> _exceptionSaverLogicMock;
         private readonly Mock<IOrderLogic> _orderLogicMock;
         private readonly Mock<IDatabaseLogic> _databaseLogicMock;
@@ -31,7 +29,6 @@ namespace XYZ.Tests.Logic.Features.Billing.Paysera
             _simpleLoggerMock = new Mock<ISimpleLogger>();
             _payseraApiLogicMock = new Mock<IApiOrderLogic<PayseraOrderInfo, PayseraOrderResult>>();
             _payseraMapperLogicMock = new Mock<IOrderMapperLogic<PayseraOrderInfo>>();
-            _payseraOrderSavingLogicMock = new Mock<IGatewayOrderSavingLogic<PAYSERA_GATEWAY_ORDER>>();
             _exceptionSaverLogicMock = new Mock<IExceptionSaverLogic>();
             _orderLogicMock = new Mock<IOrderLogic>();
             _databaseLogicMock = new Mock<IDatabaseLogic>();
@@ -39,7 +36,6 @@ namespace XYZ.Tests.Logic.Features.Billing.Paysera
             _payseraGatewayLogic = new PayseraGatewayLogic(
                 _payseraApiLogicMock.Object,
                 _payseraMapperLogicMock.Object,
-                _payseraOrderSavingLogicMock.Object,
                 _exceptionSaverLogicMock.Object,
                 _simpleLoggerMock.Object,
                 _orderLogicMock.Object,

@@ -19,7 +19,8 @@ namespace XYZ.Logic.Billing.Factory
         /// <param name="gatewayLogics">Collection of registered payment gateways.</param>
         public BillingGatewayFactory(IEnumerable<IPaymentGatewayLogic> gatewayLogics)
         {
-            if (gatewayLogics == null) throw new ArgumentNullException(nameof(gatewayLogics));
+            if (gatewayLogics == null) 
+                throw new ArgumentNullException(nameof(gatewayLogics));
 
             _paymentGateways = gatewayLogics.ToDictionary(g => g.GatewayType);
         }

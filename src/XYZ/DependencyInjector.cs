@@ -6,6 +6,8 @@ using XYZ.DataAccess.Logic.Utility;
 using XYZ.Logic.Billing.Factory;
 using XYZ.Logic.Common.Interfaces;
 using XYZ.Logic.Features.Billing;
+using XYZ.Logic.Features.Billing.Paypal;
+using XYZ.Logic.Features.Billing.Paysera;
 using XYZ.Models.System.Configuration;
 
 namespace XYZ.Web
@@ -56,8 +58,10 @@ namespace XYZ.Web
             // DB
             ConfigureDb(services, configuration);
 
-            // Factories
-            services.AddSingleton<IBillingGatewayFactory, BillingGatewayFactory>();
+            // Payment factory
+            services.AddTransient<IPaymentGatewayLogic, PaypalGatewayLogic>();
+            services.AddTransient<IPaymentGatewayLogic, PayseraGatewayLogic>();
+            services.AddTransient<IBillingGatewayFactory, BillingGatewayFactory>();
         }
 
         /// <summary>
@@ -119,7 +123,9 @@ namespace XYZ.Web
         {
             return new List<Type>()
             {
-                typeof(BillingGatewayFactory)
+                typeof(BillingGatewayFactory),
+                typeof(PaypalGatewayLogic),
+                typeof(PayseraGatewayLogic),
             };
         }
     }

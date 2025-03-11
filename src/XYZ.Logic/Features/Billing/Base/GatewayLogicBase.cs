@@ -1,4 +1,7 @@
-﻿using XYZ.Logic.Common.Interfaces;
+﻿using XYZ.DataAccess.Enums;
+using XYZ.DataAccess.Interfaces;
+using XYZ.DataAccess.Tables.Base;
+using XYZ.Logic.Common.Interfaces;
 using XYZ.Logic.Features.Billing.Paypal;
 using XYZ.Models.Common.Enums;
 using XYZ.Models.Common.ExceptionHandling;
@@ -38,6 +41,16 @@ namespace XYZ.Logic.Features.Billing.Base
         private readonly IExceptionSaverLogic _exceptionSaverLogic;
 
         /// <summary>
+        /// Database access.
+        /// </summary>
+        protected readonly IDatabaseLogic _databaseLogic;
+
+        /// <summary>
+        /// Specific gateway type
+        /// </summary>
+        public abstract PaymentGatewayType GatewayType { get; }
+
+        /// <summary>
         /// Shared gateway logic accross all gateways, contains general logic.
         /// </summary>
         /// <param name="simpleLogger">File logging logic.</param>
@@ -48,18 +61,15 @@ namespace XYZ.Logic.Features.Billing.Base
             ISimpleLogger simpleLogger, 
             IApiOrderLogic<TInput, TOutput> apiOrderLogic, 
             IExceptionSaverLogic exceptionSaverLogic,
-            IOrderMapperLogic<TInput> mapper)
+            IOrderMapperLogic<TInput> mapper,
+            IDatabaseLogic databaseLogic)
         {
             _simpleLogger = simpleLogger;
             _apiOrderLogic = apiOrderLogic;
             _exceptionSaverLogic = exceptionSaverLogic;
             _mapper = mapper;
+            _databaseLogic = databaseLogic;
         }
-
-        /// <summary>
-        /// Specific gateway type
-        /// </summary>
-        public abstract PaymentGatewayType GatewayType { get; }
 
         /// <summary>
         /// General order validation logic,
@@ -138,5 +148,12 @@ namespace XYZ.Logic.Features.Billing.Base
             _simpleLogger.Log($"{eventResult} | {GatewayType} | {nameof(order.UserId)}: {order.UserId} | {nameof(order.OrderNumber)}: {order.OrderNumber}");
             return processResult;
         }
+
+        /// <summary>
+        /// Saves gateway specific order.
+        /// </summary>
+        /// <returns>Saved order main identifier.</returns>
+        protected virtual async Task<long> SaveOrder<T>(ICommandRepository<T> repository) where T : TABLE_BASE, new() =>
+            await _databaseLogic.CommandAsync(repository, CommandTypes.Create, new T());
     }
 }

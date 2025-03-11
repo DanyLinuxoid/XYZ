@@ -1,5 +1,6 @@
 ﻿using Moq;
 
+using XYZ.DataAccess.Enums;
 using XYZ.DataAccess.Interfaces;
 using XYZ.DataAccess.Tables.ORDER_TABLE;
 using XYZ.DataAccess.Tables.ORDER_TBL.Queries;
@@ -19,7 +20,6 @@ namespace XYZ.Tests.Logic.Features.Billing.Paypal
         private readonly Mock<ISimpleLogger> _loggerMock;
         private readonly Mock<IApiOrderLogic<PaypalOrderInfo, PaypalOrderResult>> _paypalApiLogicMock;
         private readonly Mock<IOrderMapperLogic<PaypalOrderInfo>> _paypalMapperLogicMock;
-        private readonly Mock<IGatewayOrderSavingLogic<PAYPAL_GATEWAY_ORDER>> _paypalOrderSavingLogicMock;
         private readonly Mock<IExceptionSaverLogic> _exceptionSaverLogicMock;
         private readonly Mock<IOrderLogic> _orderLogicMock;
         private readonly Mock<IDatabaseLogic> _databaseLogicMock;
@@ -30,7 +30,6 @@ namespace XYZ.Tests.Logic.Features.Billing.Paypal
             _loggerMock = new Mock<ISimpleLogger>();
             _paypalApiLogicMock = new Mock<IApiOrderLogic<PaypalOrderInfo, PaypalOrderResult>>();
             _paypalMapperLogicMock = new Mock<IOrderMapperLogic<PaypalOrderInfo>>();
-            _paypalOrderSavingLogicMock = new Mock<IGatewayOrderSavingLogic<PAYPAL_GATEWAY_ORDER>>();
             _exceptionSaverLogicMock = new Mock<IExceptionSaverLogic>();
             _orderLogicMock = new Mock<IOrderLogic>();
             _databaseLogicMock = new Mock<IDatabaseLogic>();
@@ -39,7 +38,6 @@ namespace XYZ.Tests.Logic.Features.Billing.Paypal
                 _loggerMock.Object,
                 _paypalApiLogicMock.Object,
                 _paypalMapperLogicMock.Object,
-                _paypalOrderSavingLogicMock.Object,
                 _exceptionSaverLogicMock.Object,
                 _loggerMock.Object,
                 _orderLogicMock.Object,
@@ -60,7 +58,6 @@ namespace XYZ.Tests.Logic.Features.Billing.Paypal
             _paypalApiLogicMock.Setup(a => a.GetProcessedOrderResultAsync(It.IsAny<PaypalOrderInfo>())).ReturnsAsync(orderResult);
             _orderLogicMock.Setup(o => o.SaveOrder(It.IsAny<OrderDto>())).Returns(Task.FromResult((long)0));
             _databaseLogicMock.Setup(d => d.QueryAsync(It.IsAny<OrderByOrderNumberAndUserIdGetQuery>())).ReturnsAsync((ORDER?)null);
-            _paypalOrderSavingLogicMock.Setup(p => p.SaveOrder(new PAYPAL_GATEWAY_ORDER())).ReturnsAsync(1);
             _paypalMapperLogicMock.Setup(x => x.ToMappedOrderDto(mappedOrder)).Returns(dto);
 
             // Act
@@ -180,11 +177,9 @@ namespace XYZ.Tests.Logic.Features.Billing.Paypal
             var dto = new OrderDto { UserId = 1, OrderNumber = 100, PayableAmount = 100 };
 
             _paypalMapperLogicMock.Setup(m => m.ToMappedOrderInfo(It.IsAny<OrderInfo>())).Returns(mappedOrder);
+            _paypalMapperLogicMock.Setup(m => m.ToMappedOrderDto(It.IsAny<PaypalOrderInfo>())).Returns(dto);
             _paypalApiLogicMock.Setup(a => a.GetProcessedOrderResultAsync(It.IsAny<PaypalOrderInfo>())).ReturnsAsync(orderResult);
             _databaseLogicMock.Setup(d => d.QueryAsync(It.IsAny<OrderByOrderNumberAndUserIdGetQuery>())).ReturnsAsync((ORDER?)null);
-            _paypalOrderSavingLogicMock
-                .Setup(p => p.SaveOrder(It.IsAny<PAYPAL_GATEWAY_ORDER>()))
-                .ReturnsAsync(1); _paypalMapperLogicMock.Setup(x => x.ToMappedOrderDto(mappedOrder)).Returns(dto);
             _orderLogicMock.Setup(o => o.SaveOrder(It.IsAny<OrderDto>())).ReturnsAsync(1);
 
             // Act
@@ -192,7 +187,10 @@ namespace XYZ.Tests.Logic.Features.Billing.Paypal
 
             // Assert
             Assert.Equal(OrderStatus.Completed, result.OrderStatus);
-            _paypalOrderSavingLogicMock.Verify(p => p.SaveOrder(It.IsAny<PAYPAL_GATEWAY_ORDER>()), Times.Once);
+            _databaseLogicMock.Verify(
+                db => db.CommandAsync(It.IsAny<ICommandRepository<PAYPAL_GATEWAY_ORDER>>(), CommandTypes.Create, It.IsAny<PAYPAL_GATEWAY_ORDER>()),
+                Times.Once
+            );
         }
     }
 }
