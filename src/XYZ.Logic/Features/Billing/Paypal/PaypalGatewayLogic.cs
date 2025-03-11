@@ -1,6 +1,7 @@
 ﻿using XYZ.DataAccess.Interfaces;
 using XYZ.DataAccess.Tables.ORDER_TABLE;
 using XYZ.DataAccess.Tables.ORDER_TBL.Queries;
+using XYZ.DataAccess.Tables.PAYPAL_ORDER_TABLE;
 using XYZ.Logic.Common.Interfaces;
 using XYZ.Logic.Features.Billing.Base;
 using XYZ.Models.Common.Api.Paypal;
@@ -19,6 +20,11 @@ namespace XYZ.Logic.Features.Billing.Paypal
         /// Main order logic.
         /// </summary>
         private readonly IOrderLogic _orderLogic;
+
+        /// <summary>
+        /// Gateway specific order saving
+        /// </summary>
+        private readonly IGatewayOrderSavingLogic<PAYPAL_GATEWAY_ORDER> _gatewayOrderSavingLogic;
 
         /// <summary>
         /// Database access.
@@ -42,16 +48,17 @@ namespace XYZ.Logic.Features.Billing.Paypal
         /// <param name="databaseLogic">Database access.</param>
         public PaypalGatewayLogic(
             ISimpleLogger logger,
-             IApiOrderLogic<PaypalOrderInfo, PaypalOrderResult> paypalApiLogic,
+            IApiOrderLogic<PaypalOrderInfo, PaypalOrderResult> paypalApiLogic,
             IOrderMapperLogic<PaypalOrderInfo> paypalMapperLogic,
-            IPaypalGatewayOrderSavingLogic paypalOrderSavingLogic,
+            IGatewayOrderSavingLogic<PAYPAL_GATEWAY_ORDER> paypalOrderSavingLogic,
             IExceptionSaverLogic exceptionSaverLogic,
             ISimpleLogger simpleLogger,
             IOrderLogic orderLogic,
-            IDatabaseLogic databaseLogic) : base(simpleLogger, paypalApiLogic, paypalOrderSavingLogic, exceptionSaverLogic, paypalMapperLogic)
+            IDatabaseLogic databaseLogic) : base(simpleLogger, paypalApiLogic, exceptionSaverLogic, paypalMapperLogic)
         {
             _orderLogic = orderLogic;
             _databaseLogic = databaseLogic;
+            _gatewayOrderSavingLogic = paypalOrderSavingLogic;
         }
 
         /// <summary>
@@ -82,7 +89,7 @@ namespace XYZ.Logic.Features.Billing.Paypal
 
             var mappedDto = _mapper.ToMappedOrderDto(mappedOrder);
             mappedDto.OrderStatus = result.OrderStatus;
-            mappedDto.PaypalOrderId = orderFull == null ? await _gatewayOrderSavingLogic.SaveOrder() : orderFull.PAYPAL_ORDER_ID;
+            mappedDto.PaypalOrderId = orderFull == null ? await _gatewayOrderSavingLogic.SaveOrder(new PAYPAL_GATEWAY_ORDER()) : orderFull.PAYPAL_ORDER_ID;
             if (orderFull == null) // If new order and didn't fail earlier
                 await _orderLogic.SaveOrder(mappedDto);
             else

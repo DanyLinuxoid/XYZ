@@ -3,7 +3,7 @@ using XYZ.Models.Common.Api.Paypal;
 using XYZ.Models.Common.Enums;
 using XYZ.Models.Features.Billing.Data;
 
-namespace XYZ.Tests.Logic.Features.Billing.Paypal
+namespace XYZ.Tests.LogicTests.Features.Billing.MapperTests
 {
     public class PaypalMapperLogicTests
     {

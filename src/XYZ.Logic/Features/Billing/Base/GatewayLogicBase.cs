@@ -18,11 +18,6 @@ namespace XYZ.Logic.Features.Billing.Base
         where TOutput : OrderResult, new()
     {
         /// <summary>
-        /// General gateway order saving logic,
-        /// </summary>
-        protected readonly IGatewayOrderSavingLogic _gatewayOrderSavingLogic;
-
-        /// <summary>
         /// General order mapping logic.
         /// </summary>
         protected readonly IOrderMapperLogic<TInput> _mapper;
@@ -47,19 +42,16 @@ namespace XYZ.Logic.Features.Billing.Base
         /// </summary>
         /// <param name="simpleLogger">File logging logic.</param>
         /// <param name="apiOrderLogic">Gateway general api logic.</param>
-        /// <param name="gatewayOrderSavingLogic">Gateway general api logic.</param>
         /// <param name="exceptionSaverLogic">Exception saving logic.</param>
         /// <param name="mapper">General order mapping logic.</param>
         public GatewayLogicBase(
             ISimpleLogger simpleLogger, 
             IApiOrderLogic<TInput, TOutput> apiOrderLogic, 
-            IGatewayOrderSavingLogic gatewayOrderSavingLogic, 
             IExceptionSaverLogic exceptionSaverLogic,
             IOrderMapperLogic<TInput> mapper)
         {
             _simpleLogger = simpleLogger;
             _apiOrderLogic = apiOrderLogic;
-            _gatewayOrderSavingLogic = gatewayOrderSavingLogic;
             _exceptionSaverLogic = exceptionSaverLogic;
             _mapper = mapper;
         }

@@ -1,6 +1,7 @@
 ﻿using XYZ.DataAccess.Interfaces;
 using XYZ.DataAccess.Tables.ORDER_TABLE;
 using XYZ.DataAccess.Tables.ORDER_TBL.Queries;
+using XYZ.DataAccess.Tables.PAYSERA_ORDER_TABLE;
 using XYZ.Logic.Common.Interfaces;
 using XYZ.Logic.Features.Billing.Base;
 using XYZ.Models.Common.Api.Paysera;
@@ -21,6 +22,11 @@ namespace XYZ.Logic.Features.Billing.Paysera
         private readonly IOrderLogic _orderLogic;
 
         /// <summary>
+        /// Gateway specific order saving
+        /// </summary>
+        private readonly IGatewayOrderSavingLogic<PAYSERA_GATEWAY_ORDER> _gatewayOrderSavingLogic;
+
+        /// <summary>
         /// Database access.
         /// </summary>
         private readonly IDatabaseLogic _databaseLogic;
@@ -38,14 +44,15 @@ namespace XYZ.Logic.Features.Billing.Paysera
         public PayseraGatewayLogic(
             IApiOrderLogic<PayseraOrderInfo, PayseraOrderResult> payseraApiLogic,
             IOrderMapperLogic<PayseraOrderInfo> payseraMapperLogic,
-            IPayseraGatewayOrderSavingLogic payseraOrderSavingLogic,
+            IGatewayOrderSavingLogic<PAYSERA_GATEWAY_ORDER> payseraOrderSavingLogic,
             IExceptionSaverLogic exceptionSaverLogic,
             ISimpleLogger simpleLogger,
             IOrderLogic orderLogic,
-            IDatabaseLogic databaseLogic) : base(simpleLogger, payseraApiLogic, payseraOrderSavingLogic, exceptionSaverLogic, payseraMapperLogic)
+            IDatabaseLogic databaseLogic) : base(simpleLogger, payseraApiLogic, exceptionSaverLogic, payseraMapperLogic)
         {
             _orderLogic = orderLogic;
             _databaseLogic = databaseLogic;
+            _gatewayOrderSavingLogic = payseraOrderSavingLogic;
         }
 
         /// <summary>
@@ -81,7 +88,7 @@ namespace XYZ.Logic.Features.Billing.Paysera
 
             var mappedDto = _mapper.ToMappedOrderDto(mappedOrder);
             mappedDto.OrderStatus = result.OrderStatus;
-            mappedDto.PayseraOrderId = orderFull == null ? await _gatewayOrderSavingLogic.SaveOrder() : orderFull.PAYSERA_ORDER_ID;
+            mappedDto.PayseraOrderId = orderFull == null ? await _gatewayOrderSavingLogic.SaveOrder(new PAYSERA_GATEWAY_ORDER()) : orderFull.PAYSERA_ORDER_ID;
             if (orderFull == null) // If new order and didn't fail earlier
                 await _orderLogic.SaveOrder(mappedDto);
             else

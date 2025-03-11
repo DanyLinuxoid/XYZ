@@ -3,7 +3,7 @@ using XYZ.Models.Common.Api.Paysera;
 using XYZ.Models.Common.Enums;
 using XYZ.Models.Features.Billing.Data;
 
-namespace XYZ.Tests.LogicTests.Features.Billing
+namespace XYZ.Tests.LogicTests.Features.Billing.MapperTests
 {
     public class PayseraMapperLogicTests
     {

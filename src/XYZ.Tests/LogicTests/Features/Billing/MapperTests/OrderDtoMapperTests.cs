@@ -3,7 +3,7 @@ using XYZ.Logic.Features.Billing.Mappers;
 using XYZ.Models.Common.Enums;
 using XYZ.Models.Features.Billing.Data.Dto;
 
-namespace XYZ.Tests.Logic.Features.Billing.Mappers
+namespace XYZ.Tests.LogicTests.Features.Billing.MapperTests
 {
     public class OrderDtoMapperTests
     {
