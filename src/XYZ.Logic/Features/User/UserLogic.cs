@@ -21,7 +21,7 @@ namespace XYZ.Logic.Features.User
         /// <summary>
         /// User management constructor.
         /// </summary>
-        /// <param name="databaseLogic"></param>
+        /// <param name="databaseLogic">Database access.</param>
         public UserLogic(IDatabaseLogic databaseLogic)
         {
             _databaseLogic = databaseLogic;
@@ -48,7 +48,7 @@ namespace XYZ.Logic.Features.User
             if (user == null)
                 return null;
 
-            return user?.ToDto();
+            return user.ToDto();
         }
     }
 }

@@ -51,7 +51,7 @@ namespace XYZ.Logic.Features.Billing.Paypal
         /// Main gateway public access entrypoint.
         /// </summary>
         /// <param name="order">Generic order from logic.</param>
-        /// <returns></returns>
+        /// <returns>Order execution result with details.</returns>
         /// <exception cref="ArgumentNullException">Is thrown if null parameters.</exception>
         /// <exception cref="InvalidOperationException">Is thrown when order cannot be processed.</exception>
         public async Task<OrderResult> GetGatewayOrderProcessResultAsync(OrderInfo order)

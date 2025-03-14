@@ -2,7 +2,6 @@
 using XYZ.DataAccess.Interfaces;
 using XYZ.DataAccess.Tables.Base;
 using XYZ.Logic.Common.Interfaces;
-using XYZ.Logic.Features.Billing.Paypal;
 using XYZ.Models.Common.Enums;
 using XYZ.Models.Common.ExceptionHandling;
 using XYZ.Models.Features.Billing.Data;
@@ -14,8 +13,8 @@ namespace XYZ.Logic.Features.Billing.Base
     /// <summary>
     /// Shared gateway logic accross all gateways, contains general logic.
     /// </summary>
-    /// <typeparam name="TInput"></typeparam>
-    /// <typeparam name="TOutput"></typeparam>
+    /// <typeparam name="TInput">Input information.</typeparam>
+    /// <typeparam name="TOutput">Output information.</typeparam>
     public abstract class GatewayLogicBase<TInput, TOutput>
         where TInput : OrderInfo
         where TOutput : OrderResult, new()
@@ -108,7 +107,7 @@ namespace XYZ.Logic.Features.Billing.Base
             {
                 string errorMessage = $"Order processing failed for user {order.UserId} with order id {order.OrderNumber}";
                 await _exceptionSaverLogic.SaveUserErrorAsync(ex, order.UserId);
-                _simpleLogger.Log($"({nameof(PaypalGatewayLogic)}): {errorMessage}");
+                _simpleLogger.Log($"({order.PaymentGateway}): {errorMessage}");
                 return new()
                 {
                     ProblemDetails = new ProblemDetailed(ex.Message, errorMessage, isException: true),

@@ -30,6 +30,7 @@
         {
             Title = title;
             Details = details;
+            IsException = isException;
         }
     }
 }
