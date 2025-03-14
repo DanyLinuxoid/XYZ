@@ -20,9 +20,19 @@ namespace XYZ.Logic.Features.Billing.Base
         where TOutput : OrderResult, new()
     {
         /// <summary>
+        /// Specific gateway type
+        /// </summary>
+        public abstract PaymentGatewayType GatewayType { get; }
+
+        /// <summary>
         /// General order mapping logic.
         /// </summary>
         protected readonly IOrderMapperLogic<TInput> _mapper;
+
+        /// <summary>
+        /// Database access.
+        /// </summary>
+        protected readonly IDatabaseLogic _databaseLogic;
 
         /// <summary>
         /// File logging logic.
@@ -38,16 +48,6 @@ namespace XYZ.Logic.Features.Billing.Base
         /// Exception saving logic.
         /// </summary>
         private readonly IExceptionSaverLogic _exceptionSaverLogic;
-
-        /// <summary>
-        /// Database access.
-        /// </summary>
-        protected readonly IDatabaseLogic _databaseLogic;
-
-        /// <summary>
-        /// Specific gateway type
-        /// </summary>
-        public abstract PaymentGatewayType GatewayType { get; }
 
         /// <summary>
         /// Shared gateway logic accross all gateways, contains general logic.
@@ -147,12 +147,5 @@ namespace XYZ.Logic.Features.Billing.Base
             _simpleLogger.Log($"{eventResult} | {GatewayType} | {nameof(order.UserId)}: {order.UserId} | {nameof(order.OrderNumber)}: {order.OrderNumber}");
             return processResult;
         }
-
-        /// <summary>
-        /// Saves gateway specific order.
-        /// </summary>
-        /// <returns>Saved order main identifier.</returns>
-        protected virtual async Task<long> SaveOrder<T>(ICommandRepository<T> repository) where T : TABLE_BASE, new() =>
-            await _databaseLogic.CommandAsync(repository, CommandTypes.Create, new T());
     }
 }

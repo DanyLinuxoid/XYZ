@@ -1,4 +1,5 @@
-﻿using XYZ.DataAccess.Interfaces;
+﻿using XYZ.DataAccess.Enums;
+using XYZ.DataAccess.Interfaces;
 using XYZ.DataAccess.Tables.ORDER_TABLE;
 using XYZ.DataAccess.Tables.ORDER_TBL.Queries;
 using XYZ.DataAccess.Tables.PAYPAL_ORDER_TABLE;
@@ -75,12 +76,13 @@ namespace XYZ.Logic.Features.Billing.Paypal
 
             var mappedDto = _mapper.ToMappedOrderDto(mappedOrder);
             mappedDto.OrderStatus = result.OrderStatus;
-            mappedDto.PaypalOrderId = orderFull == null ? await SaveOrder(new PAYPAL_GATEWAY_ORDER_CUD()) : orderFull.PAYPAL_ORDER_ID;
+            mappedDto.PaypalOrderId = orderFull == null 
+                ? await _databaseLogic.CommandAsync(new PAYPAL_GATEWAY_ORDER_CUD(), CommandTypes.Create, new PAYPAL_GATEWAY_ORDER()) 
+                : orderFull.PAYPAL_ORDER_ID;
             if (orderFull == null) // If new order and didn't fail earlier
                 await _orderLogic.SaveOrder(mappedDto);
             else
                 await _orderLogic.UpdateOrder(mappedDto);
-
             return result;
         }
     }

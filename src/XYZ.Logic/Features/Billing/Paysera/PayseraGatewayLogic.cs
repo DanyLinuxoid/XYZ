@@ -1,6 +1,8 @@
-﻿using XYZ.DataAccess.Interfaces;
+﻿using XYZ.DataAccess.Enums;
+using XYZ.DataAccess.Interfaces;
 using XYZ.DataAccess.Tables.ORDER_TABLE;
 using XYZ.DataAccess.Tables.ORDER_TBL.Queries;
+using XYZ.DataAccess.Tables.PAYPAL_ORDER_TABLE;
 using XYZ.DataAccess.Tables.PAYSERA_ORDER_TABLE;
 using XYZ.Logic.Common.Interfaces;
 using XYZ.Logic.Features.Billing.Base;
@@ -74,7 +76,9 @@ namespace XYZ.Logic.Features.Billing.Paysera
 
             var mappedDto = _mapper.ToMappedOrderDto(mappedOrder);
             mappedDto.OrderStatus = result.OrderStatus;
-            mappedDto.PayseraOrderId = orderFull == null ? await SaveOrder(new PAYSERA_GATEWAY_ORDER_CUD()) : orderFull.PAYSERA_ORDER_ID;
+            mappedDto.PayseraOrderId = orderFull == null
+                ? await _databaseLogic.CommandAsync(new PAYSERA_GATEWAY_ORDER_CUD(), CommandTypes.Create, new PAYSERA_GATEWAY_ORDER())
+                : orderFull.PAYSERA_ORDER_ID;
             if (orderFull == null) // If new order and didn't fail earlier
                 await _orderLogic.SaveOrder(mappedDto);
             else
